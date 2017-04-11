@@ -24,5 +24,4 @@
         <activity android:name=".view.FavoritePersonsActivity" />
         <activity android:name=".view.MenuActivity" />
     </application>
-
 </manifest>
