@@ -1,0 +1,12 @@
+spring:
+  profiles:
+  # active: production, testing, dummy
+  datasource:
+    url: jdbc:mariadb://c02-dev.space:3306/SpringBootTest
+    username: c02user
+    password: njjoic902pmDAFckja8
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate.ddl-auto: update
