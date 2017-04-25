@@ -4,7 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+import lombok.Data;
+
+@Data
 @Entity
 public class Restaurant {
 
@@ -13,9 +17,10 @@ public class Restaurant {
 	private Long id;
 	private String name;
 	private String ort;
-	private String category;
-	
-	public Restaurant(String name, String ort, String category) {
+	@ManyToOne
+	private Cat category;
+
+	public Restaurant(String name, String ort, Cat category) {
 		this.name = name;
 		this.ort = ort;
 		this.category = category;
@@ -26,8 +31,7 @@ public class Restaurant {
 		return "Restaurant [id=" + id + ", name=" + name + ", ort=" + ort + ", category=" + category + "]";
 	}
 	
-	
-	
-	
-	
+	public Restaurant(){
+	}
+
 }

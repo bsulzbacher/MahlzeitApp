@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import lombok.Data;
+
 @Entity
 public class User {
 
@@ -24,12 +26,8 @@ public class User {
 	@OneToMany
 	private Set<User> favorites;
 	@ManyToMany
-	//@JoinTable(name = "Group_Join", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"))
+	@JoinTable(name="user_groups")
 	private Set<Group> groups;
-	
-	
-
-	
 
 	public User(String surname, String prename, String pwd) {
 		this.surname = surname;
@@ -37,16 +35,44 @@ public class User {
 		this.pwd = pwd;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", surname=" + surname + ", prename=" + prename + ", pwd=" + pwd + ", favorites="
-				+ favorites + ", groups=" + groups + "]";
+//	@Override
+//	 public String toString() {
+//	  return "User [id=" + id + ", surname=" + surname + ", prename=" + prename + ", pwd=" + pwd + ", favorites="
+//	    + favorites + ", groups=" + groups + "]";
+//	 }
+	
+	public User(){
 	}
 
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-	
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getPrename() {
+		return prename;
+	}
+
+	public void setPrename(String prename) {
+		this.prename = prename;
+	}
+
+	public Set<User> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(Set<User> favorites) {
+		this.favorites = favorites;
+	}
 }
-

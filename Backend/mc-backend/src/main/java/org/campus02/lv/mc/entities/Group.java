@@ -18,36 +18,33 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="Gruppe")
+@Table(name = "Gruppe")
 public class Group {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	
 	private Long id;
+	
 	@OneToOne
-	@JoinColumn(name="id")
 	private Restaurant restaurant;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
+
+	@ManyToMany(mappedBy="groups"	)
 	private Set<User> members;
+	
 	private Date date;
-	
-	
+
 	public Group(Restaurant restaurant, Set<User> members, Date date) {
 		this.restaurant = restaurant;
 		this.members = members;
 		this.date = date;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Group [id=" + id + ", restaurant=" + restaurant + ", members=" + members + ", date=" + date + "]";
 	}
 	
-	
-	
-	
-	
+	public Group(){
+	}
+
 }
