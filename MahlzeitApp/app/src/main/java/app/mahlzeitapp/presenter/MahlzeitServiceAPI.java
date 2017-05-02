@@ -10,6 +10,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -24,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Map;
 
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.view.MainActivity;
@@ -85,7 +88,7 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
-                                Person p =  new Person(user.getPersonenkennziffer(), o.get("prename").toString(), o.get("surname").toString());
+                                Person p =  new Person(o.get("id").toString(), o.get("prename").toString(), o.get("surname").toString());
                                 if(o.get("isFriend").toString().toLowerCase() == "true")
                                     user.setFavorit(p);
                                 personen.add(p);
@@ -108,39 +111,46 @@ public class MahlzeitServiceAPI {
     public void removeFavoritePerson(Person user, Person favorite, Context co) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
-        /*RequestQueue queue = Volley.newRequestQueue(co);
+        RequestQueue queue = Volley.newRequestQueue(co);
 
-        final JSONObject jsonBody = new JSONObject("{\"type\":\"example\"}");
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String t= response.toString();
-                        try {
-                            JSONArray obj = new JSONArray(t);
-                            ArrayList<Person> personen  = new ArrayList<Person>();
+        JSONArray myarray = new JSONArray();
 
-                            for(int i = 0; i < obj.length(); i++)
-                            {
-                                JSONObject o = obj.getJSONObject(i);
-                                Person p =  new Person(user.getPersonenkennziffer(), o.get("prename").toString(), o.get("surname").toString());
-                                if(o.get("isFriend").toString().toLowerCase() == "true")
-                                    user.setFavorit(p);
-                                personen.add(p);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                String t= response.toString();
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String t= "error";
             }
         });
 
-        queue.add(stringRequest);*/
+        queue.add(request);
+    }
 
+    public void addFavoritePerson(Person user, Person favorite, Context co) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
+
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+        JSONArray myarray = new JSONArray();
+        myarray.put(Integer.parseInt(favorite.getPersonenkennziffer()));
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                String t= response.toString();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String t= "error";
+            }
+        });
+
+        queue.add(request);
     }
 }
 

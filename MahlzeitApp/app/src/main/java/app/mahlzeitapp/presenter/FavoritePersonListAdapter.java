@@ -89,6 +89,14 @@ public class FavoritePersonListAdapter extends ArrayAdapter<Person>
                     else
                     {
                         holder.imgIcon.setImageResource(R.mipmap.ic_favorite);
+                        user.setFavorit(p);
+                        try {
+                            service.addFavoritePerson(user, p, context);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
