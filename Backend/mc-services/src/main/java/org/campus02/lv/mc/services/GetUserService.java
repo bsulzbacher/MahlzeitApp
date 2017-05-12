@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.campus02.lv.mc.entities.User;
+import org.campus02.lv.mc.pojo.UserComplete;
 import org.campus02.lv.mc.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class GetUserService {
 	public User loginuser(Long id) {
 		User user; 
 		try {
-	            user = this.repo.getOne(id);
+	            user = this.repo.findOne(id);
 	        } catch (Exception e) {
 	            log_.error(e.getMessage());
 	            return null;
@@ -38,9 +39,31 @@ public class GetUserService {
 		return user;
 	}
 	
-	public List<User> getAll(Long id) {
-
-		return this.repo.findAll();
+	public List<UserComplete> getAll(Long id) {
+		List<User> users = this.repo.findAll();
+		
+		User foundUser = loginuser(id);
+		
+		List<UserComplete> returnedUsers = new ArrayList<>();
+		
+		for (User u1 : users) {
+			
+			boolean found = false;
+			for (User u2 : foundUser.getFavorites()) {
+				if (u1.getId().equals(u2.getId())) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (!u1.getId().equals(id)) {
+				UserComplete uc = new UserComplete(u1.getId(), u1.getSurname(), u1.getPrename());
+				uc.setIsFriend(found);
+				
+				returnedUsers.add(uc);
+			}
+		}
+		return returnedUsers;
 	}
 	
 	public void addFriends(List<Long> usersToAdd, Long loggedInUserId) {
