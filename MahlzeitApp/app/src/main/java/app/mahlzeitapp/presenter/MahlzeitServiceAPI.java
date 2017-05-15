@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.presenter.Database.MahlzeitDataSource;
 import app.mahlzeitapp.view.MainActivity;
 import app.mahlzeitapp.view.MenuActivity;
 
@@ -38,7 +40,10 @@ import app.mahlzeitapp.view.MenuActivity;
 
 public class MahlzeitServiceAPI {
 
-    public MahlzeitServiceAPI() throws MalformedURLException {
+    private MahlzeitDataSource dataSource;
+
+    public MahlzeitServiceAPI(Context context) throws MalformedURLException {
+        dataSource = new MahlzeitDataSource(context);
     }
 
 
@@ -56,6 +61,10 @@ public class MahlzeitServiceAPI {
                         try {
                             obj = new JSONObject(t);
                             Person p =  new Person(pnm, obj.get("prename").toString(), obj.get("surname").toString());
+                            dataSource.open();
+                            dataSource.insertUser(p, 1);
+                            dataSource.cleanFavoriteTable();
+                            dataSource.close();
                             callback.onSuccess(p);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -64,10 +73,12 @@ public class MahlzeitServiceAPI {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        String t= "error";
+                        dataSource.openRead();
+                        Person p = dataSource.getUserData();
+                        dataSource.close();
+                        callback.onSuccess(p);
                     }
         });
-
         queue.add(stringRequest);
     }
 
@@ -89,9 +100,16 @@ public class MahlzeitServiceAPI {
                             {
                                 JSONObject o = obj.getJSONObject(i);
                                 Person p =  new Person(o.get("id").toString(), o.get("prename").toString(), o.get("surname").toString());
-                                if(o.get("isFriend").toString().toLowerCase() == "true")
+                                if(o.get("isFriend").toString().toLowerCase() == "true") {
                                     user.setFavorit(p);
+                                    dataSource.open();
+                                    dataSource.insertFavorite(user,p);
+                                    dataSource.close();
+                                }
                                 personen.add(p);
+                                dataSource.open();
+                                dataSource.insertUser(p, 0);
+                                dataSource.close();
                             }
                             callback.onGetALL(personen);
                         } catch (JSONException e) {
@@ -101,20 +119,32 @@ public class MahlzeitServiceAPI {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String t= "error";
+                dataSource.openRead();
+                ArrayList<Person> personenFavorites = dataSource.getFavorites();
+                ArrayList<Person> personen = dataSource.getAllPersonen();
+                dataSource.close();
+                user.clearFavorites();
+                for(int i = 0; i < personenFavorites.size(); i++)
+                {
+                    user.setFavorit(personenFavorites.get(i));
+                }
+                callback.onGetALL(personen);
             }
         });
 
         queue.add(stringRequest);
     }
 
-    public void removeFavoritePerson(Person user, Person favorite, Context co) throws IOException, JSONException {
+    public void removeFavoritePerson(final Person user, final Person p, Context co) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
+        ArrayList<Person> favorite = user.getFavoritePersons();
         RequestQueue queue = Volley.newRequestQueue(co);
 
         JSONArray myarray = new JSONArray();
-
+        for(int i = 0; i < favorite.size(); i++) {
+            myarray.put(Integer.parseInt(favorite.get(i).getPersonenkennziffer()));
+        }
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -123,20 +153,25 @@ public class MahlzeitServiceAPI {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String t= "error";
+                dataSource.open();
+                dataSource.removeFavorite(user, p);
+                dataSource.close();
             }
         });
 
         queue.add(request);
     }
 
-    public void addFavoritePerson(Person user, Person favorite, Context co) throws IOException, JSONException {
+    public void addFavoritePerson(final Person user, final Person p, Context co) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
+        ArrayList<Person> favorite = user.getFavoritePersons();
         JSONArray myarray = new JSONArray();
-        myarray.put(Integer.parseInt(favorite.getPersonenkennziffer()));
+        for(int i = 0; i < favorite.size(); i++) {
+            myarray.put(Integer.parseInt(favorite.get(i).getPersonenkennziffer()));
+        }
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
             @Override
@@ -146,7 +181,11 @@ public class MahlzeitServiceAPI {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String t= "error";
+                if(p != null) {
+                    dataSource.open();
+                    dataSource.insertFavorite(user, p);
+                    dataSource.close();
+                }
             }
         });
 

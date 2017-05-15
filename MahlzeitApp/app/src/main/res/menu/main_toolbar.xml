@@ -5,10 +5,16 @@
             android:id="@+id/favorite"
             android:icon="@mipmap/ic_favorite"
             app:showAsAction="ifRoom"
-            android:title="home"/>
+            android:title="favorites"/>
         <item
             android:id="@+id/home"
             android:icon="@mipmap/ic_home"
             app:showAsAction="ifRoom"
             android:title="home"/>
+
+        <item
+            android:id="@+id/launcher"
+            android:icon="@mipmap/ic_launcher"
+            app:showAsAction="ifRoom"
+            android:title="refresh"/>
 </menu>

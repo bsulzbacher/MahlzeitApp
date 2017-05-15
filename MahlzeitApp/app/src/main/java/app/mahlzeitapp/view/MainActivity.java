@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 import app.mahlzeitapp.R;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.presenter.Database.MahlzeitDataSource;
+import app.mahlzeitapp.presenter.Database.MahlzeitDbHelper;
 import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
 import app.mahlzeitapp.presenter.VolleyCallback;
 
@@ -24,7 +26,8 @@ import app.mahlzeitapp.presenter.VolleyCallback;
 public class MainActivity extends AppCompatActivity  {
 
     public static Person user = null;
-    MahlzeitServiceAPI service = new MahlzeitServiceAPI();
+
+    MahlzeitServiceAPI service = new MahlzeitServiceAPI(MainActivity.this);
 
     public MainActivity() throws MalformedURLException {
     }

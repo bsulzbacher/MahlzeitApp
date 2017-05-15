@@ -18,7 +18,7 @@ import app.mahlzeitapp.presenter.VolleyCallback;
 
 public class FavoritePersonsActivity extends BaseActivity {
 
-    MahlzeitServiceAPI service = new MahlzeitServiceAPI();
+    MahlzeitServiceAPI service = new MahlzeitServiceAPI(FavoritePersonsActivity.this);
     Person user;
 
     public FavoritePersonsActivity() throws MalformedURLException {

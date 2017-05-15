@@ -8,10 +8,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
 
 
 public class BaseActivity extends AppCompatActivity {
+
+    MahlzeitServiceAPI service = new MahlzeitServiceAPI(BaseActivity.this);
+    Person user;
+
+    public BaseActivity() throws MalformedURLException {
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -30,6 +43,15 @@ public class BaseActivity extends AppCompatActivity {
             case R.id.favorite:
                 showFavoritePersonsView();
                 return true;
+            case R.id.launcher:
+                try {
+                    uploadContent();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -43,5 +65,10 @@ public class BaseActivity extends AppCompatActivity {
     public void showFavoritePersonsView() {
         Intent intent = new Intent(this, FavoritePersonsActivity.class);
         startActivity(intent);
+    }
+
+    public void uploadContent() throws IOException, JSONException {
+        user = MainActivity.user;
+        service.addFavoritePerson(user, null, BaseActivity.this);
     }
 }

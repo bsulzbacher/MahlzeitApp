@@ -20,21 +20,30 @@ public class Person {
         favoritePersons = new ArrayList<Person>();
     }
 
+    public String getVorname() { return this.vorname; }
+    public String getNachname() { return this.nachname; }
+
     public void setFavorit(Person favorite)
     {
         this.favoritePersons.add(favorite);
     }
 
+    public void clearFavorites() { this.favoritePersons.clear(); }
+
     public void removeFavorite(Person favorite)
     {
-        this.favoritePersons.remove(favorite);
+        for(int i = 0; i < favoritePersons.size(); i++)
+        {
+            if(favoritePersons.get(i).getPersonenkennziffer().equals(favorite.getPersonenkennziffer()))
+                this.favoritePersons.remove(i);
+        }
     }
 
     public boolean checkFavorite(Person p)
     {
         for(int i = 0; i < favoritePersons.size(); i++)
         {
-            if(favoritePersons.get(i) == p)
+            if(favoritePersons.get(i).getPersonenkennziffer().equals(p.getPersonenkennziffer()))
                 return true;
         }
         return false;
@@ -45,6 +54,7 @@ public class Person {
         return this.personenkennziffer;
     }
 
+    public ArrayList<Person> getFavoritePersons() { return this.favoritePersons; }
     @Override
     public String toString()
     {
