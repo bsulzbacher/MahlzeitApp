@@ -1,7 +1,5 @@
 package org.campus02.lv.mc.services;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
