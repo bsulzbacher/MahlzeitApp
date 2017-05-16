@@ -11,9 +11,7 @@ import org.campus02.lv.mc.pojo.Cat;
 import org.campus02.lv.mc.pojo.Groups;
 import org.campus02.lv.mc.pojo.Restaurant;
 import org.campus02.lv.mc.pojo.UserComplete;
-import org.campus02.lv.mc.repositories.CategoryRepository;
 import org.campus02.lv.mc.repositories.GroupRepository;
-import org.campus02.lv.mc.repositories.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +34,12 @@ public class GetGroupsSevice {
 		for (Group g : allGroups) {
 			Cat cat = new Cat(g.getRestaurant().getCategory().getId(), g.getRestaurant().getCategory().getCategory());
 			Set<UserComplete> members = new HashSet<>();
-			
+
 			for (User u : g.getMembers()) {
 				UserComplete uc = new UserComplete(u.getId(), u.getSurname(), u.getPrename());
 				Set<User> favorites = foundUser.getFavorites();
 				boolean isFriend = favorites.stream().filter(user -> user.getId().equals(u.getId())).count() > 0;
 				uc.setIsFriend(isFriend);
-
 				members.add(uc);
 			}
 			Restaurant res = new Restaurant(g.getRestaurant().getId(), g.getRestaurant().getName(),
