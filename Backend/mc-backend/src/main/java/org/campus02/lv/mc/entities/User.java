@@ -75,4 +75,14 @@ public class User {
 	public void setFavorites(Set<User> favorites) {
 		this.favorites = favorites;
 	}
+
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+	
+	
 }

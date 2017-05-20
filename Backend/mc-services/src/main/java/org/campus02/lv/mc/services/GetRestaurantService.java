@@ -42,6 +42,9 @@ public class GetRestaurantService {
 	
 	
 	public void addRest(Restaurant r){
+		
+		Cat cat= r.getCategory();
+		this.catRepo.save(cat);
 		this.resRepo.save(r);
 	}
 }
