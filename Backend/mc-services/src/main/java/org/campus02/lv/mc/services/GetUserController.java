@@ -20,11 +20,19 @@ public class GetUserController {
 	@Autowired	
 	private GetUserService userService;
 
-	@RequestMapping(method = RequestMethod.GET, path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(method = RequestMethod.GET, path = "login/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<LoginUser> loginuser(@PathVariable(value="id") Long id) {
 		User user = this.userService.loginuser(id);
+	   
+		if (user != null) {
+			log_.info(user.toString());
+			log_.info(id.toString());
+			
 			LoginUser loginUser = new LoginUser(user.getId(), user.getSurname(), user.getPrename());
 			return new ResponseEntity<>(loginUser, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new LoginUser(), HttpStatus.OK);
+		}
 		
 	}
 }
