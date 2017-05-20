@@ -1,12 +1,11 @@
 package org.campus02.lv.mc.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import org.campus02.lv.mc.entities.Group;
 import org.campus02.lv.mc.entities.User;
@@ -54,25 +53,22 @@ public class GetGroupsSevice {
 			groupsSend.add(group);
 		}
 
-		return groupsSend;
+		return todayGroup(groupsSend);
+	}
+	
+	public List<Groups> todayGroup(List<Groups> allgroups){
+		List<Groups> todaygroups = new ArrayList<>();
+		String today=new SimpleDateFormat("yyyyyMMdd").format(new Date());
+		for (Groups g:allgroups){
+			String groupdate=new SimpleDateFormat("yyyyyMMdd").format(g.getDate());
+			if (groupdate.equals(today)){
+				todaygroups.add(g);
+			}
+		}
+		
+		
+		return todaygroups;
 	}
 
-	public void addUserToGroup(Long userId, Long groupId) {
-		Group group = groupRepo.findOne(groupId);
-		User user = userRepo.findOne(userId);
-		group.getMembers().add(user);
-		groupRepo.save(group);
-
-	}
-
-	public void addGroup(Group group, Long id) {
-		User user = userRepo.findOne(id);
-		Set<User> users=new HashSet<User>();
-		users.add(user);		
-		group.setMembers(users);
-		Date date=new Date();
-		group.setDate(date);
-		groupRepo.save(group);
-
-	}
+	
 }

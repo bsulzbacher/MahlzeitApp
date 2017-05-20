@@ -41,6 +41,7 @@ public class RestaurantController {
 		
 	}
 	
+	//{"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
 	@RequestMapping(method = RequestMethod.POST, path = "/addrestaurant", produces = { MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<String> addRestaurant(@RequestBody Restaurant resToAdd) throws JsonProcessingException {
 		
