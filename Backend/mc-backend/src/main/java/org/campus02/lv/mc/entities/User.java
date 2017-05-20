@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
@@ -23,7 +24,7 @@ public class User {
 	private String surname;
 	private String prename;
 	private String pwd;
-	@OneToMany
+	@ManyToMany
 	private Set<User> favorites;
 	@ManyToMany
 	@JoinTable(name="user_groups")
