@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.campus02.lv.mc.entities.Group;
+import org.campus02.lv.mc.entities.Restaurant;
 import org.campus02.lv.mc.entities.User;
 import org.campus02.lv.mc.pojo.Groups;
 import org.campus02.lv.mc.pojo.UserComplete;
@@ -28,6 +29,9 @@ public class GroupControler {
 	
 	@Autowired	
 	private GetGroupsSevice groupservice;
+	@Autowired	
+	private GroupsSevice groupservicePost;
+	
 
 	@RequestMapping(method = RequestMethod.GET, path = "/getGroups/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<List<Groups>> getAll(@PathVariable(value="id") Long id) {
@@ -35,6 +39,23 @@ public class GroupControler {
 		
 		return new ResponseEntity<List<Groups>>(groupservice.getAll(id), HttpStatus.OK);
 		
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.POST, path = "/addGroup/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<String> addRestaurant(@PathVariable(value="id") Long id,@RequestBody Group groupToAdd) throws JsonProcessingException {
+		
+		this.groupservicePost.addGroup(groupToAdd,id);
+		
+		return new ResponseEntity<>("Added", HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, path = "/addMember/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<String> addRestaurant(@PathVariable(value="id") Long userId,@RequestBody Long groupId) throws JsonProcessingException {
+		
+		this.groupservicePost.addUserToGroup(userId, groupId);
+		
+		return new ResponseEntity<>("Added", HttpStatus.OK);
 	}
 	
 	

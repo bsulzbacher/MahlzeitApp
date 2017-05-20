@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-@Data
+
 @Entity
 @Table(name = "Gruppe")
 public class Group {
@@ -29,7 +29,7 @@ public class Group {
 	@ManyToOne
 	private Restaurant restaurant;
 
-	@ManyToMany(mappedBy="groups"	)
+	@ManyToMany(mappedBy="groups")
 	private Set<User> members;
 	
 	private Date date;
@@ -47,5 +47,39 @@ public class Group {
 	
 	public Group(){
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+
+	public Set<User> getMembers() {
+		return members;
+	}
+
+	public void setMembers(Set<User> members) {
+		this.members = members;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	
 
 }

@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
-@Data
+
 @Entity
 public class Restaurant {
 
@@ -33,5 +33,39 @@ public class Restaurant {
 	
 	public Restaurant(){
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getOrt() {
+		return ort;
+	}
+
+	public void setOrt(String ort) {
+		this.ort = ort;
+	}
+
+	public Cat getCategory() {
+		return category;
+	}
+
+	public void setCategory(Cat category) {
+		this.category = category;
+	}
+	
+	
 
 }

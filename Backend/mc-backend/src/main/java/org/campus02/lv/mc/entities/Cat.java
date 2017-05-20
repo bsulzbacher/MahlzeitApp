@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
-@Data
+
 @Entity
 public class Cat {
 	@Id
@@ -21,5 +21,23 @@ public class Cat {
 
 	public Cat() {
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	
 
 }
