@@ -53,7 +53,8 @@ public class GetGroupsSevice {
 			groupsSend.add(group);
 		}
 
-		return todayGroup(groupsSend);
+		//return todayGroup(groupsSend); //nur heutige Gruppen
+		return groupsSend;
 	}
 	
 	public List<Groups> todayGroup(List<Groups> allgroups){
