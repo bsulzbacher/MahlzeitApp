@@ -14,6 +14,9 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_USER = "user";
     public static final String TABLE_FAVORITES = "favorites";
+    public static final String TABLE_CAT = "categories";
+    public static final String TABLE_RESTAURANTS = "restaurants";
+    public static final String TABLE_GROUPS = "groups";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_FIRSTNAME = "firstname";
@@ -22,6 +25,23 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
 
     public static final String COLUMN_ID_USER = "_id";
     public static final String COLUMN_ID_FAVORITE = "idFavorite";
+
+    //???
+    //public static final String COLUMN_ID_CAT = "_id";
+    //public static final String COLUMN_NAME_CAT = "name";
+    public static final String COLUMN_NAME = "name";
+
+    //public static final String COLUMN_ID_RESTAURANT = "_id";
+    //public static final String COLUMN_NAME_RESTAURANT = "name";
+    public static final String COLUMN_PLACE = "place";
+    //cat?
+
+    //public static final String COLUMN_ID_GROUP = "_id";
+    public static final String COLUMN_DATE = "date";
+    //res? members?
+    public static final String COLUMN_ID_RESTAURANT = "idRestaurant";
+
+
 
     public static final String SQL_CREATE =
             "CREATE TABLE " + TABLE_USER +
@@ -35,6 +55,27 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
                     "(" + COLUMN_ID_USER + " INTEGER NOT NULL, " +
                     COLUMN_ID_FAVORITE + " INTEGER NOT NULL," +
                     " PRIMARY KEY ("+COLUMN_ID_USER+", "+COLUMN_ID_FAVORITE+"));";
+
+    //???????????????????
+
+    public static final String SQL_CREATE2 =
+            "CREATE TABLE" + TABLE_CAT +
+                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_NAME + " TEXT NOT NULL);";
+
+    public static final String SQL_CREATE3 =
+            "CREATE TABLE" + TABLE_RESTAURANTS +
+                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_NAME + " TEXT NOT NULL," +
+                    COLUMN_PLACE + "  TEXT NOT NULL);";
+
+    public static final String SQL_CREATE4 =
+            "CREATE TABLE" + TABLE_GROUPS +
+                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_ID_RESTAURANT + " INTEGER NOT NULL);";
+
+
+
 
     public MahlzeitDbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
