@@ -13,6 +13,6 @@ public interface VolleyCallback{
     //-------------------------------------------------
     //void onGetGroups(ArrayList<Group> groups);
     //void onGetRestaurants(ArrayList<Restaurant> restaurants);
-    //void onGetCat(ArrayList<Cat> categories);
+    void onGetCat(ArrayList<Cat> categories);
     //-------------------------------------------------
 }

@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import app.mahlzeitapp.model.Cat;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 
 /**
  * Created by Bianca on 12.05.2017.
@@ -107,4 +109,61 @@ public class MahlzeitDataSource {
     {
         database.delete("favorites", "idFavorite = ?", new String[] {favorite.getPersonenkennziffer()});
     }
+
+    //---------------------------------------------------------------------------
+
+    //Category
+
+    public ArrayList<Cat> getAllCat() {
+        Cursor resultSet = database.rawQuery("Select _id, name from cat", null);
+        ArrayList<Cat> categories = new ArrayList<Cat>();
+        resultSet.moveToFirst();
+        while (!resultSet.isAfterLast()) {
+            int id = resultSet.getInt(0);
+            String name = resultSet.getString(1);
+            categories.add(new Cat(Integer.toString(id), name));
+            resultSet.moveToNext();
+        }
+        return categories;
+    }
+
+    public void insertCat(Cat c)
+    {
+        database.delete("user", "_id = ?", new String[] {c.getId()});
+        ContentValues values = new ContentValues();
+        values.put("_id", c.getId());
+        values.put("name", c.getName());
+        database.insertOrThrow("categories", null, values);
+    }
+
+    //Restaurant
+
+    public ArrayList<Cat> getAllRestaurants() {
+        Cursor resultSet = database.rawQuery("Select _id, name, place from restaurant", null);
+        ArrayList<Cat> categories = new ArrayList<Cat>();
+        resultSet.moveToFirst();
+        while (!resultSet.isAfterLast()) {
+            int id = resultSet.getInt(0);
+            String name = resultSet.getString(1);
+            categories.add(new Cat(Integer.toString(id), name));
+            resultSet.moveToNext();
+        }
+        return categories;
+    }
+
+    public void insertRestaurant(Restaurant r)
+    {
+        database.delete("categories", "_id = ?", new String[]);
+        ContentValues values = new ContentValues();
+        values.put("_id", r.getId());
+        values.put("name", r.getName());
+        values.put("place", r.getPlace());
+        values.put("", r.getCategory().getId());
+        values.put("", r.getCategory().getName());
+        database.insertOrThrow("user", null, values);
+    }
+
+
+    //---------------------------------------------------------------------------
+
 }

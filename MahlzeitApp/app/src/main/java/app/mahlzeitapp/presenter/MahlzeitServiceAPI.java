@@ -32,6 +32,7 @@ import java.util.Map;
 import app.mahlzeitapp.model.Cat;
 import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.Database.MahlzeitDataSource;
 import app.mahlzeitapp.view.MainActivity;
 import app.mahlzeitapp.view.MenuActivity;
@@ -195,8 +196,8 @@ public class MahlzeitServiceAPI {
     }
 
     //---------------------------------------------------------------------------
-    public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.2.2:8080/users/getGroups/" + user.getPersonenkennziffer();
+    /*public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -234,12 +235,12 @@ public class MahlzeitServiceAPI {
         });
 
         queue.add(stringRequest);
-    }
+    }*/
 
 
 
     public void getAllCat(Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.2.2:8080/users/getallcat/";
+        String url = "http://10.0.2.2:8080/restaurant/getallcat/";
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -255,13 +256,13 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
-                                Cat c =  new Cat(o.get("id").toString(), o.get("category").toString());
+                                Cat c =  new Cat(o.get("id").toString(), o.get("name").toString());
                                 categories.add(c);
                                 dataSource.open();
-                                dataSource.insertCategory(c, 0);
+                                dataSource.insertCat(c);
                                 dataSource.close();
                             }
-                            callback.onGetGroups(categories);
+                            callback.onGetCat(categories);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -278,6 +279,49 @@ public class MahlzeitServiceAPI {
 
         queue.add(stringRequest);
     }
+
+    public void getAllRestaurants(Context co, final VolleyCallback callback) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/restaurant/getall/";
+
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String t= response.toString();
+                        try {
+                            JSONArray obj = new JSONArray(t);
+                            ArrayList<Restaurant> restaurants  = new ArrayList<Restaurant>();
+
+                            for(int i = 0; i < obj.length(); i++)
+                            {
+                                JSONObject o = obj.getJSONObject(i);
+                                Restaurant r =  new Restaurant(o.get("id").toString(), o.get("name").toString(), o.get("place").toString(),
+                                        new Cat(o.get("id").toString(), o.get("name").toString()));
+                                restaurants.add(r);
+                                dataSource.open();
+                                dataSource.insertRestaurant(r, 0);
+                                dataSource.close();
+                            }
+                            callback.onGetRestaurants(restaurants);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dataSource.openRead();
+                ArrayList<Restaurant> restaurants = dataSource.getAllRestaurants();
+                dataSource.close();
+                callback.onGetRestaurants(restaurants);
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
 
     //---------------------------------------------------------------------------
 
