@@ -44,7 +44,7 @@ public class MenuActivity extends BaseActivity {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         TextView myTextView = (TextView) findViewById(R.id.todays_date); myTextView.setText("Tagesübersicht " + date);
 
-        //todays groups
+        //todays groups ?
         try {
             service.getAllGroups(user, MenuActivity.this,  new VolleyCallback() {
 
@@ -58,15 +58,14 @@ public class MenuActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        //button "new group"
+        //button "new group" ?
         final Button button = (Button) findViewById(R.id.btn_new_group);
         button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v) {
-                //EditText personenkennziffer = (EditText) findViewById(R.id.edit_username);
-                //final String txt = personenkennziffer.getText().toString();
+
                 try {
-                    service.addGroup(txt, MenuActivity.this, new VolleyCallback() {
+                    service.addGroup(user, MenuActivity.this, new VolleyCallback() {
                         @Override
                         public void onSuccess(Person p) {
                             user = p;

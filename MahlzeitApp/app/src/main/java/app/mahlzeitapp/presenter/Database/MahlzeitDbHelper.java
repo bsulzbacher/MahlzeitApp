@@ -34,11 +34,7 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
     //public static final String COLUMN_ID_RESTAURANT = "_id";
     //public static final String COLUMN_NAME_RESTAURANT = "name";
     public static final String COLUMN_PLACE = "place";
-    //cat?
-
-    //public static final String COLUMN_ID_GROUP = "_id";
     public static final String COLUMN_DATE = "date";
-    //res? members?
     public static final String COLUMN_ID_RESTAURANT = "idRestaurant";
 
 

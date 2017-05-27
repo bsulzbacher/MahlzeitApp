@@ -195,7 +195,7 @@ public class MahlzeitServiceAPI {
         queue.add(request);
     }
 
-    //Groups ? ? ?
+    //Groups
 
     public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
@@ -214,10 +214,11 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
+                                //group, restaurant, cat, members ?
                                 Group g =  new Group(o.get("id").toString(), o.get("prename").toString(), o.get("surname").toString());
                                 groups.add(g);
                                 dataSource.open();
-                                dataSource.insertGroup(g, 0);
+                                dataSource.insertGroup(g);
                                 dataSource.close();
                             }
                             callback.onGetGroups(groups);
@@ -238,7 +239,7 @@ public class MahlzeitServiceAPI {
         queue.add(stringRequest);
     }
 
-    //senden: {"restaurant":{"id":3}}
+    //zb senden: {"restaurant":{"id":3}}
     public void addGroup(final Person user, final Group group, Context co) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/groups/addGroup/" + user.getPersonenkennziffer();
 
@@ -257,12 +258,22 @@ public class MahlzeitServiceAPI {
             public void onErrorResponse(VolleyError error) {
                 if(group != null) {
                     dataSource.open();
-                    dataSource.insertGroup(group); //-> mit PersId?
+                    dataSource.insertGroup(group); //-> mit userId?
                     dataSource.close();
                 }
             }
         });
         queue.add(request);
+    }
+
+    //zb senden: 12 (kein JSON?)
+    public void joinGroup(final Person user, final Group group, Context co) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/groups/addMember/" + user.getPersonenkennziffer();
+
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+        //?
+
     }
 
 
@@ -286,7 +297,7 @@ public class MahlzeitServiceAPI {
                             {
                                 JSONObject o = obj.getJSONObject(i);
                                 Restaurant r =  new Restaurant(o.get("id").toString(), o.get("name").toString(), o.get("place").toString(),
-                                        new Cat(o.get("id").toString(), o.get("name").toString()));
+                                        new Cat(o.get("id").toString(), o.get("category").toString()));
                                 restaurants.add(r);
                                 dataSource.open();
                                 dataSource.insertRestaurant(r);
@@ -310,21 +321,23 @@ public class MahlzeitServiceAPI {
         queue.add(stringRequest);
     }
 
-    //senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
+    //zb senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
     public void addRestaurant(final Person user, final Restaurant restaurant, Context co) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/restaurant/addrestaurant/";
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
-        /*ArrayList<Person> favorite = user.getFavoritePersons();
-        JSONArray myarray = new JSONArray();
-        for(int i = 0; i < favorite.size(); i++) {
-            myarray.put(Integer.parseInt(favorite.get(i).getPersonenkennziffer()));
-        }*/
+        JSONObject categoryJson = new JSONObject();
+        categoryJson.put("id", restaurant.getCategory().getId());
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
+        JSONObject myobject = new JSONObject();
+        myobject.put("id", restaurant.getId());
+        myobject.put("ort", restaurant.getPlace());
+        myobject.put("category", categoryJson); //kann man das so verschachteln? xD
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, myobject, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 String t= response.toString();
             }
         }, new Response.ErrorListener() {
@@ -332,7 +345,7 @@ public class MahlzeitServiceAPI {
             public void onErrorResponse(VolleyError error) {
                 if(restaurant != null) {
                     dataSource.open();
-                    dataSource.insertRestaurant(restaurant); //user mitsenden?
+                    dataSource.insertRestaurant(restaurant); //mit userId?
                     dataSource.close();
                 }
             }
