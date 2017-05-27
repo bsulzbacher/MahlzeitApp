@@ -195,8 +195,9 @@ public class MahlzeitServiceAPI {
         queue.add(request);
     }
 
-    //---------------------------------------------------------------------------
-    /*public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
+    //Groups ? ? ?
+
+    public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -228,57 +229,44 @@ public class MahlzeitServiceAPI {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dataSource.openRead();
-                ArrayList<Group> groups = dataSource.getAllGroups();
+                ArrayList<Group> groups = dataSource.getAllGroups(user);
                 dataSource.close();
                 callback.onGetGroups(groups);
             }
         });
 
         queue.add(stringRequest);
-    }*/
+    }
 
-
-
-    public void getAllCat(Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.2.2:8080/restaurant/getallcat/";
+    //senden: {"restaurant":{"id":3}}
+    public void addGroup(final Person user, final Group group, Context co) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/groups/addGroup/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String t= response.toString();
-                        try {
-                            JSONArray obj = new JSONArray(t);
-                            ArrayList<Cat> categories  = new ArrayList<Cat>();
+        JSONObject myobject = new JSONObject();
+        myobject.put("id", group.getRestaurant().getId()); //-> {"restaurant":{"id":3}} ???
 
-                            for(int i = 0; i < obj.length(); i++)
-                            {
-                                JSONObject o = obj.getJSONObject(i);
-                                Cat c =  new Cat(o.get("id").toString(), o.get("name").toString());
-                                categories.add(c);
-                                dataSource.open();
-                                dataSource.insertCat(c);
-                                dataSource.close();
-                            }
-                            callback.onGetCat(categories);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, myobject, new Response.Listener<JSONObject>(){
+            @Override
+            public void onResponse(JSONObject response) {
+                String t = response.toString();
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dataSource.openRead();
-                ArrayList<Cat> categories = dataSource.getAllCat();
-                dataSource.close();
-                callback.onGetCat(categories);
+                if(group != null) {
+                    dataSource.open();
+                    dataSource.insertGroup(group); //-> mit PersId?
+                    dataSource.close();
+                }
             }
         });
-
-        queue.add(stringRequest);
+        queue.add(request);
     }
+
+
+    //Restaurants
 
     public void getAllRestaurants(Context co, final VolleyCallback callback) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/restaurant/getall/";
@@ -322,8 +310,82 @@ public class MahlzeitServiceAPI {
         queue.add(stringRequest);
     }
 
+    //senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
+    public void addRestaurant(final Person user, final Restaurant restaurant, Context co) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/restaurant/addrestaurant/";
 
-    //---------------------------------------------------------------------------
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+        /*ArrayList<Person> favorite = user.getFavoritePersons();
+        JSONArray myarray = new JSONArray();
+        for(int i = 0; i < favorite.size(); i++) {
+            myarray.put(Integer.parseInt(favorite.get(i).getPersonenkennziffer()));
+        }*/
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, myarray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                String t= response.toString();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(restaurant != null) {
+                    dataSource.open();
+                    dataSource.insertRestaurant(restaurant); //user mitsenden?
+                    dataSource.close();
+                }
+            }
+        });
+
+        queue.add(request);
+    }
+
+
+    //Categories
+
+    public void getAllCat(Context co, final VolleyCallback callback) throws IOException, JSONException {
+        String url = "http://10.0.2.2:8080/restaurant/getallcat/";
+
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String t= response.toString();
+                        try {
+                            JSONArray obj = new JSONArray(t);
+                            ArrayList<Cat> categories  = new ArrayList<Cat>();
+
+                            for(int i = 0; i < obj.length(); i++)
+                            {
+                                JSONObject o = obj.getJSONObject(i);
+                                Cat c =  new Cat(o.get("id").toString(), o.get("name").toString());
+                                categories.add(c);
+                                dataSource.open();
+                                dataSource.insertCat(c);
+                                dataSource.close();
+                            }
+                            callback.onGetCat(categories);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dataSource.openRead();
+                ArrayList<Cat> categories = dataSource.getAllCat();
+                dataSource.close();
+                callback.onGetCat(categories);
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+
 
 }
 
