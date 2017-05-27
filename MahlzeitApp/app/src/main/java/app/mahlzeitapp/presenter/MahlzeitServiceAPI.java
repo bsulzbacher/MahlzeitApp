@@ -301,7 +301,7 @@ public class MahlzeitServiceAPI {
                                         new Cat(o.get("id").toString(), o.get("name").toString()));
                                 restaurants.add(r);
                                 dataSource.open();
-                                dataSource.insertRestaurant(r, 0);
+                                dataSource.insertRestaurant(r);
                                 dataSource.close();
                             }
                             callback.onGetRestaurants(restaurants);

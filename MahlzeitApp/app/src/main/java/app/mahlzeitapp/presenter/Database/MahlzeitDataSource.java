@@ -110,7 +110,6 @@ public class MahlzeitDataSource {
         database.delete("favorites", "idFavorite = ?", new String[] {favorite.getPersonenkennziffer()});
     }
 
-    //---------------------------------------------------------------------------
 
     //Category
 
@@ -129,7 +128,7 @@ public class MahlzeitDataSource {
 
     public void insertCat(Cat c)
     {
-        database.delete("user", "_id = ?", new String[] {c.getId()});
+        database.delete("user", "_id = ?", new String[] {c.getId()}); //new String "cat id"?
         ContentValues values = new ContentValues();
         values.put("_id", c.getId());
         values.put("name", c.getName());
@@ -138,22 +137,25 @@ public class MahlzeitDataSource {
 
     //Restaurant
 
-    public ArrayList<Cat> getAllRestaurants() {
-        Cursor resultSet = database.rawQuery("Select _id, name, place from restaurant", null);
-        ArrayList<Cat> categories = new ArrayList<Cat>();
+    public ArrayList<Restaurant> getAllRestaurants() {
+        Cursor resultSet = database.rawQuery("Select _id, name, place from restaurant", null); //cat?
+        ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
         resultSet.moveToFirst();
         while (!resultSet.isAfterLast()) {
             int id = resultSet.getInt(0);
             String name = resultSet.getString(1);
-            categories.add(new Cat(Integer.toString(id), name));
+            String place = resultSet.getString(2);
+            String catId = resultSet.getString(3); //?
+            String catName = resultSet.getString(4); //?
+            restaurants.add(new Restaurant(Integer.toString(id), name, place, new Cat(catId, catName)));
             resultSet.moveToNext();
         }
-        return categories;
+        return restaurants;
     }
 
     public void insertRestaurant(Restaurant r)
     {
-        database.delete("categories", "_id = ?", new String[]);
+        database.delete("categories", "_id = ?", new String[] {r.getId()}); //new String "restaurant id"?
         ContentValues values = new ContentValues();
         values.put("_id", r.getId());
         values.put("name", r.getName());
@@ -163,7 +165,5 @@ public class MahlzeitDataSource {
         database.insertOrThrow("user", null, values);
     }
 
-
-    //---------------------------------------------------------------------------
 
 }
