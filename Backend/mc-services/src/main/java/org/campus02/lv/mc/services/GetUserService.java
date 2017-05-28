@@ -23,16 +23,14 @@ public class GetUserService {
 	private UserRepository repo;
 	
 	public User loginuser(Long id) {
-		User user; 
+		User user = new User();
 		try {
 	            user = this.repo.findOne(id);
 	        } catch (Exception e) {
 	            log_.error(e.getMessage());
 	            return null;
 	        }
-		 
-		log_.info(user.toString());
-		log_.info(id.toString());
+
 		
 		return user;
 	}

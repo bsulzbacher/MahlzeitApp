@@ -12,9 +12,13 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.model.Cat;
+import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
 import app.mahlzeitapp.presenter.VolleyCallback;
 
@@ -45,10 +49,7 @@ public class GroupDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 //to do: send groupId (in body), userId (in url) like this: {"restaurant":{"id":3}} -> goToHomeView
                 try {
-                    service.addGroup(user.getPersonenkennziffer(), GroupDetailActivity.this, new VolleyCallback() {
-                        //to do
-
-                    });
+                    service.addGroup(user, null, GroupDetailActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

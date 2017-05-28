@@ -44,7 +44,7 @@ public class NewRestaurantActivity extends BaseActivity {
 
 
         //categories dropdown
-        Spinner catDropdown = (Spinner)findViewById(R.id.cat_spinner);
+        Spinner catDropdown = (Spinner) findViewById(R.id.cat_spinner);
         String[] catItems = new String[]{"1", "2", "three"};
         ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, catItems);
         catDropdown.setAdapter(catAdapter);
@@ -53,15 +53,11 @@ public class NewRestaurantActivity extends BaseActivity {
         //button add restaurant - user automatically creates and joins group
         //POST: restaurants (dropdown), kategories (dropdown), userId - then go to home view
         final Button button = (Button) findViewById(R.id.btn_add_group);
-        button.setOnClickListener(new View.OnClickListener()
-        {
+        button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //to do (send userId)
                 try {
-                    service.addRestaurant(user.getPersonenkennziffer(), NewRestaurantActivity.this, new VolleyCallback() {
-                        //to do
-
-                    });
+                    service.addRestaurant(user, null, NewRestaurantActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -71,7 +67,7 @@ public class NewRestaurantActivity extends BaseActivity {
         });
     }
 
-    public void goToHomeView(Person user) {
+            public void goToHomeView(Person user) {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }

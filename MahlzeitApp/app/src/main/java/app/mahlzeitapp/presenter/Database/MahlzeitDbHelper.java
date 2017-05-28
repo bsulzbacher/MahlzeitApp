@@ -10,13 +10,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MahlzeitDbHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "mahlzeit.db";
-    public static final int DB_VERSION = 9;
+    public static final int DB_VERSION = 13;
 
     public static final String TABLE_USER = "user";
     public static final String TABLE_FAVORITES = "favorites";
     public static final String TABLE_CAT = "categories";
     public static final String TABLE_RESTAURANTS = "restaurants";
     public static final String TABLE_GROUPS = "groups";
+    public static final String TABLE_MEMBERS_GROUPS = "group_members";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_FIRSTNAME = "firstname";
@@ -27,7 +28,7 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_FAVORITE = "idFavorite";
 
     //???
-    //public static final String COLUMN_ID_CAT = "_id";
+    public static final String COLUMN_ID_CAT = "id";
     //public static final String COLUMN_NAME_CAT = "name";
     public static final String COLUMN_NAME = "name";
 
@@ -36,8 +37,8 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PLACE = "place";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_ID_RESTAURANT = "idRestaurant";
-
-
+    public static final String COLUMN_ID_MEMBER = "idMember";
+    public static final String COLUMN_ID_GROUP = "idGroup";
 
     public static final String SQL_CREATE =
             "CREATE TABLE " + TABLE_USER +
@@ -52,23 +53,28 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
                     COLUMN_ID_FAVORITE + " INTEGER NOT NULL," +
                     " PRIMARY KEY ("+COLUMN_ID_USER+", "+COLUMN_ID_FAVORITE+"));";
 
-    //???????????????????
-
     public static final String SQL_CREATE2 =
-            "CREATE TABLE" + TABLE_CAT +
+            "CREATE TABLE " + TABLE_CAT +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_NAME + " TEXT NOT NULL);";
 
     public static final String SQL_CREATE3 =
-            "CREATE TABLE" + TABLE_RESTAURANTS +
+            "CREATE TABLE " + TABLE_RESTAURANTS +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
-                    COLUMN_NAME + " TEXT NOT NULL," +
-                    COLUMN_PLACE + "  TEXT NOT NULL);";
+                    COLUMN_NAME + " TEXT NOT NULL, " +
+                    COLUMN_PLACE + "  TEXT NOT NULL, "+
+                    COLUMN_ID_CAT + "  INTEGER NOT NULL);";
 
     public static final String SQL_CREATE4 =
-            "CREATE TABLE" + TABLE_GROUPS +
+            "CREATE TABLE " + TABLE_GROUPS +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_ID_RESTAURANT + " INTEGER NOT NULL);";
+
+    public static final String SQL_CREATE5 =
+            "CREATE TABLE " + TABLE_MEMBERS_GROUPS +
+                    "(" + COLUMN_ID_GROUP + "  INTEGER NOT NULL, " +
+                    COLUMN_ID_MEMBER + " INTEGER NOT NULL, "+
+                    " PRIMARY KEY ("+COLUMN_ID_GROUP+", "+COLUMN_ID_MEMBER+"));";
 
 
 
@@ -79,17 +85,23 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
         db.execSQL(SQL_CREATE);
         db.execSQL(SQL_CREATE_MAPPING);
+        db.execSQL(SQL_CREATE2);
+        db.execSQL(SQL_CREATE3);
+        db.execSQL(SQL_CREATE4);
+        db.execSQL(SQL_CREATE5);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    /*   db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUPS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEMBERS_GROUPS);
 
-       onCreate(db);*/
+       onCreate(db);
     }
 }

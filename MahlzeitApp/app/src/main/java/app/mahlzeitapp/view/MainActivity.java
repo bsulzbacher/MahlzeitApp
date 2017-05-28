@@ -17,7 +17,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.model.Cat;
+import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.Database.MahlzeitDataSource;
 import app.mahlzeitapp.presenter.Database.MahlzeitDbHelper;
 import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
@@ -63,7 +66,22 @@ public class MainActivity extends AppCompatActivity  {
                        public void onGetALL(ArrayList<Person> personen) {
 
                        }
-                    });
+
+                       @Override
+                       public void onGetGroups(ArrayList<Group> groups) {
+
+                       }
+
+                       @Override
+                       public void onGetRestaurants(ArrayList<Restaurant> restaurants) {
+
+                       }
+
+                       @Override
+                       public void onGetCat(ArrayList<Cat> categories) {
+
+                       }
+                   });
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import app.mahlzeitapp.R;
 import app.mahlzeitapp.model.Cat;
+import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.FavoritePersonListAdapter;
@@ -54,7 +55,7 @@ public class FavoritePersonsActivity extends BaseActivity {
 
                     @Override
                     public void onGetGroups(ArrayList<Group> groups) {
-
+                        
                     }
 
                     @Override

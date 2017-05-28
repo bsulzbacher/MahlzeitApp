@@ -63,34 +63,27 @@ public class NewGroupActivity extends BaseActivity {
         //button new group (today)
         //POST: restaurants (dropdown), kategories (dropdown), userId - then go to home view
         final Button buttonAddGroup = (Button) findViewById(R.id.btn_add_group);
-        buttonAddGroup.setOnClickListener(new View.OnClickListener()
-        {
+        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               //to do: send restaurantId (JSON), userId (in url) like this: {"restaurant":{"id":3}} -> goToHomeView
+                //to do: send restaurantId (JSON), userId (in url) like this: {"restaurant":{"id":3}} -> goToHomeVi
                 try {
-                    service.addGroup(user.getPersonenkennziffer(), NewGroupActivity.this, new VolleyCallback() {
-                        //to do
-
-                    });
+                    service.addGroup(user, null, NewGroupActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                //button new restaurant
+                //POST: userid?
+                final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
+                buttonNewRestaurant.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        goToNewRestaurantView(user);
+                    }
+                });
+
             }
         });
-
-
-        //button new restaurant
-        //POST: userid?
-        final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
-        buttonNewRestaurant.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-               goToNewRestaurantView(user);
-            }
-        });
-
     }
 
     public void goToHomeView(Person user) {

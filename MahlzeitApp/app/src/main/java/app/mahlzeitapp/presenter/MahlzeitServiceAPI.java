@@ -63,12 +63,16 @@ public class MahlzeitServiceAPI {
                         JSONObject obj = null;
                         try {
                             obj = new JSONObject(t);
-                            Person p =  new Person(pnm, obj.get("prename").toString(), obj.get("surname").toString());
-                            dataSource.open();
-                            dataSource.insertUser(p, 1);
-                            dataSource.cleanFavoriteTable();
-                            dataSource.close();
-                            callback.onSuccess(p);
+                            if(obj.get("id").toString().equals("null"))
+                                callback.onSuccess(null);
+                            else {
+                                Person p = new Person(pnm, obj.get("prename").toString(), obj.get("surname").toString());
+                                dataSource.open();
+                                dataSource.insertUser(p, 1);
+                                dataSource.cleanFavoriteTable();
+                                dataSource.close();
+                                callback.onSuccess(p);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -215,10 +219,28 @@ public class MahlzeitServiceAPI {
                             {
                                 JSONObject o = obj.getJSONObject(i);
                                 //group, restaurant, cat, members ?
-                                Group g =  new Group(o.get("id").toString(), o.get("prename").toString(), o.get("surname").toString());
+
+                                JSONObject res = o.getJSONObject("resturant");
+                                JSONObject c = res.getJSONObject("category");
+                                Cat category = new Cat(c.get("id").toString(), c.get("cat").toString());
+                                Restaurant restaurant = new Restaurant(res.get("id").toString(), res.get("name").toString(), res.get("ort").toString(), category);
+                                ArrayList<Person> members = new ArrayList<>();
+                                ArrayList<Person> favorites = new ArrayList<>();
+                                JSONArray m = o.getJSONArray("members");
+
+                                for(int j = 0; j < m.length(); j++)
+                                {
+                                    JSONObject member = m.getJSONObject(j);
+                                    Person p =  new Person(member.get("id").toString(), member.get("prename").toString(), member.get("surname").toString());
+                                    if(member.get("isFriend").toString().toLowerCase() == "true") {
+                                        favorites.add(p);
+                                    }
+                                    members.add(p);
+                                }
+                                Group g =  new Group(o.get("id").toString(), restaurant, members);
                                 groups.add(g);
                                 dataSource.open();
-                                dataSource.insertGroup(g);
+                                dataSource.insertGroup(g, user, favorites);
                                 dataSource.close();
                             }
                             callback.onGetGroups(groups);
@@ -258,7 +280,7 @@ public class MahlzeitServiceAPI {
             public void onErrorResponse(VolleyError error) {
                 if(group != null) {
                     dataSource.open();
-                    dataSource.insertGroup(group); //-> mit userId?
+                    dataSource.insertGroup(group, user, null); //-> mit userId?
                     dataSource.close();
                 }
             }

@@ -19,9 +19,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.model.Cat;
 import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.FavoritePersonListAdapter;
+import app.mahlzeitapp.presenter.GroupsListAdapter;
 import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
 import app.mahlzeitapp.presenter.VolleyCallback;
 
@@ -31,6 +34,7 @@ public class MenuActivity extends BaseActivity {
     Person user;
 
     public MenuActivity() throws MalformedURLException {
+        user = MainActivity.user;
     }
 
     @Override
@@ -49,7 +53,35 @@ public class MenuActivity extends BaseActivity {
             service.getAllGroups(user, MenuActivity.this,  new VolleyCallback() {
 
                 @Override
+                public void onSuccess(Person string) {
+
+                }
+
+                @Override
+                public void onGetALL(ArrayList<Person> personen) {
+
+                }
+
+                @Override
                 public void onGetGroups(ArrayList<Group> g) {
+                    ArrayList<Group> groups = g;
+                    final GroupsListAdapter groupsListAdapter =
+                            new GroupsListAdapter(MenuActivity.this,
+                                    R.layout.list_item_group, groups,
+                                    MainActivity.user, service
+                            );
+                    final ListView groupsListView = (ListView) findViewById(R.id.list_groups);
+                    groupsListView.setAdapter(groupsListAdapter);
+                }
+
+                @Override
+                public void onGetRestaurants(ArrayList<Restaurant> restaurants) {
+
+                }
+
+                @Override
+                public void onGetCat(ArrayList<Cat> categories) {
+
                 }
             });
         } catch (IOException e) {
@@ -65,18 +97,7 @@ public class MenuActivity extends BaseActivity {
             public void onClick(View v) {
 
                 try {
-                    service.addGroup(user, MenuActivity.this, new VolleyCallback() {
-                        @Override
-                        public void onSuccess(Person p) {
-                            user = p;
-                            goToNewGroupView(p);
-                        }
-
-                        @Override
-                        public void onGetALL(ArrayList<Person> personen) {
-
-                        }
-                    });
+                    service.addGroup(user, null, MenuActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
