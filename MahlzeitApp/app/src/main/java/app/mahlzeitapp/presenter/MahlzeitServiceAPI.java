@@ -3,8 +3,12 @@ package app.mahlzeitapp.presenter;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +29,12 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
+import app.mahlzeitapp.R;
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.presenter.Database.MahlzeitDataSource;
 import app.mahlzeitapp.view.MainActivity;
@@ -41,9 +47,11 @@ import app.mahlzeitapp.view.MenuActivity;
 public class MahlzeitServiceAPI {
 
     private MahlzeitDataSource dataSource;
+    private Context context;
 
     public MahlzeitServiceAPI(Context context) throws MalformedURLException {
         dataSource = new MahlzeitDataSource(context);
+        this.context = context;
     }
 
 
@@ -52,34 +60,38 @@ public class MahlzeitServiceAPI {
 
         RequestQueue queue = Volley.newRequestQueue(co.getApplicationContext());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String t= response.toString();
-                        JSONObject obj = null;
-                        try {
-                            obj = new JSONObject(t);
-                            Person p =  new Person(pnm, obj.get("prename").toString(), obj.get("surname").toString());
-                            dataSource.open();
-                            dataSource.insertUser(p, 1);
-                            dataSource.cleanFavoriteTable();
-                            dataSource.close();
-                            callback.onSuccess(p);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            String t = response.toString();
+                            JSONObject obj = null;
+                            try {
+                                if(t.length() > 0) {
+                                    obj = new JSONObject(t);
+                                    Person p = new Person(pnm, obj.get("prename").toString(), obj.get("surname").toString());
+                                    dataSource.open();
+                                    dataSource.insertUser(p, 1);
+                                    dataSource.cleanFavoriteTable();
+                                    dataSource.close();
+                                    callback.onSuccess(p);
+                                }else {
+                                    callback.onSuccess(null);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        dataSource.openRead();
-                        Person p = dataSource.getUserData();
-                        dataSource.close();
-                        callback.onSuccess(p);
-                    }
-        });
-        queue.add(stringRequest);
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    dataSource.openRead();
+                    Person p = dataSource.getUserData();
+                    dataSource.close();
+                    callback.onSuccess(p);
+                }
+            });
+            queue.add(stringRequest);
     }
 
     public void getAllPersonen(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {

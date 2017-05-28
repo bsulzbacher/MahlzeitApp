@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -47,8 +48,15 @@ public class MainActivity extends AppCompatActivity  {
                    service.getUserData(txt, MainActivity.this, new VolleyCallback() {
                         @Override
                         public void onSuccess(Person p) {
-                            user = p;
-                            goToHomeView(p);
+                            if(p != null) {
+                                TextView errormsg = (TextView) findViewById(R.id.label_error);
+                                errormsg.setText("");
+                                user = p;
+                                goToHomeView(p);
+                            } else {
+                                TextView errormsg = (TextView) findViewById(R.id.label_error);
+                                errormsg.setText("Falsche Personenkennziffer");
+                            }
                         }
 
                        @Override
