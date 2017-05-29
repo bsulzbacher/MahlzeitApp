@@ -214,6 +214,21 @@ public class MahlzeitDataSource {
         return groups;
     }
 
+    public void insertMember(Group g, Person user)
+    {
+        //database.delete("group_members", "idGroup = ?", new String[] {g.getId()});
+        ArrayList<Person> members = g.getMembers();
+        ContentValues member = new ContentValues();
+        member.put("idGroup", g.getId());
+        member.put("idMember", user.getPersonenkennziffer());
+        database.insertOrThrow("group_members", null, member);
+    }
+
+    public void deleteMember(Group g, Person user)
+    {
+        database.delete("group_members", "idGroup = ? AND idMember = ?", new String[] {g.getId(), user.getPersonenkennziffer()});
+    }
+
     public void insertGroup(Group g, Person user, ArrayList<Person> favorites)
     {
         database.delete("categories", "_id = ?", new String[] {g.getRestaurant().getCategory().getId()});

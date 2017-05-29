@@ -6,6 +6,16 @@
     android:layout_height="fill_parent"
     android:padding="10dp">
 
+    <ImageView android:id="@+id/imgIconGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -14,5 +24,15 @@
         android:gravity="center_vertical"
         android:id="@+id/list_item_groups" >
     </TextView>
+
+    <ImageView android:id="@+id/imgIconGroupDetail"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="right"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
 </LinearLayout>

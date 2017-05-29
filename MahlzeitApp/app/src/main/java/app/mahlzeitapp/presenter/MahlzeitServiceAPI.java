@@ -289,13 +289,34 @@ public class MahlzeitServiceAPI {
     }
 
     //zb senden: 12 (kein JSON?)
-    public void joinGroup(final Person user, final Group group, Context co) throws IOException, JSONException {
+    public void joinGroup(final Person user, final Group group, Context co, final boolean is_user_in_group) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/groups/addMember/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
-        //?
+        JSONObject obj = new JSONObject();
+        if(group != null)
+            obj.put("id", group.getId());
 
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String t= response.toString();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dataSource.open();
+                if(is_user_in_group)
+                    dataSource.deleteMember(group, user);
+                else
+                    dataSource.insertMember(group, user);
+                dataSource.close();
+            }
+        });
+
+        queue.add(request);
     }
 
 
