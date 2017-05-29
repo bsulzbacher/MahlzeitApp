@@ -51,9 +51,9 @@ public class GroupControler {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, path = "/addMember/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<String> addRestaurant(@PathVariable(value="id") Long userId,@RequestBody Long groupId) throws JsonProcessingException {
+	public ResponseEntity<String> addMember(@PathVariable(value="id") Long userId,@RequestBody Group groupId) throws JsonProcessingException {
 		
-		this.groupservicePost.addUserToGroup(userId, groupId);
+		this.groupservicePost.addUserToGroup(userId, groupId.getId());
 		
 		return new ResponseEntity<>("Added", HttpStatus.OK);
 	}
