@@ -25,7 +25,8 @@ public class Person {
 
     public void setFavorit(Person favorite)
     {
-        this.favoritePersons.add(favorite);
+        if(!checkFavorite(favorite))
+            this.favoritePersons.add(favorite);
     }
 
     public void clearFavorites() { this.favoritePersons.clear(); }

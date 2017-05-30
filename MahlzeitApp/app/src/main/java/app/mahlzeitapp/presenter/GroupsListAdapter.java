@@ -7,6 +7,8 @@ import android.content.Context;
 import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.R;
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +59,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             holder = new GroupHolder();
             holder.imgIcon = (ImageView)row.findViewById(R.id.imgIconGroup);
             holder.imgIconDetail = (ImageView)row.findViewById(R.id.imgIconGroupDetail);
-            holder.txtTitle = (TextView)row.findViewById(R.id.list_item_groups);
+            holder.txtTitle = (TextView)row.findViewById(R.id.list_item_group);
             row.setTag(holder);
         }
         else
@@ -65,16 +67,13 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             holder = (GroupHolder) row.getTag();
         }
 
+        if(group.checkIfFavoriteInGroup(user.getFavoritePersons()))
+            row.setBackgroundColor(Color.rgb(246,250,239));
+
         holder.txtTitle.setText(group.getRestaurant().getName() + "(" + group.getRestaurant().getPlace() + ")");
         holder.imgIconDetail.setImageResource(R.mipmap.ic_detail);
-        ArrayList<Person> members = group.getMembers();
-        boolean user_in_group = false;
-        for(int i = 0; i < members.size(); i++) {
-            if (members.get(i).getPersonenkennziffer().equals(user.getPersonenkennziffer()))
-                user_in_group = true;
-        }
-        final boolean user_is_group_member = user_in_group;
-        if(user_is_group_member)
+
+        if(group.checkIfUserInGroup(user))
             holder.imgIcon.setImageResource(R.mipmap.ic_remove);
         else
             holder.imgIcon.setImageResource(R.mipmap.ic_add);
@@ -85,12 +84,15 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             {
 
                 try {
-                    if(user_is_group_member) {
-                        service.joinGroup(user, group, context,user_is_group_member);
+                    boolean check = group.checkIfUserInGroup(user);
+                    if(check) {
+                        group.removeMember(user);
+                        service.joinGroup(user, group, context,check);
                         holder.imgIcon.setImageResource(R.mipmap.ic_add);
                     }
                     else {
-                        service.joinGroup(user, group, context,user_is_group_member);
+                        group.setMember(user);
+                        service.joinGroup(user, group, context,check);
                         holder.imgIcon.setImageResource(R.mipmap.ic_remove);
                     }
                 } catch (IOException e) {

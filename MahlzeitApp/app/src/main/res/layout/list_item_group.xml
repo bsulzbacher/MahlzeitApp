@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <ImageView android:id="@+id/imgIconGroup"
+    <ImageView android:id="@+id/imgIconGroupDetail"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeight"
         android:gravity="center_vertical"
-        android:id="@+id/list_item_groups" >
-    </TextView>
+        android:padding="20dp"
+        android:layout_toRightOf="@+id/imgIconGroupDetail"
+        android:id="@+id/list_item_group" />
 
-    <ImageView android:id="@+id/imgIconGroupDetail"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:gravity="right"
+    <ImageView android:id="@+id/imgIconGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+
+</RelativeLayout>

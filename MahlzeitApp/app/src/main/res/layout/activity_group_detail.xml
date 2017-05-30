@@ -40,7 +40,7 @@
 
     <!-- list all favorites & not favorites (favo list adapter?) only of this group -->
     <ListView
-        android:id="@+id/list_groups"
+        android:id="@+id/list_persons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/group_place"/>

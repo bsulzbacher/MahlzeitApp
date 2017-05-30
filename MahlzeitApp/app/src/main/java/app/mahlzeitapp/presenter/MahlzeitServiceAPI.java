@@ -225,7 +225,7 @@ public class MahlzeitServiceAPI {
                                 Cat category = new Cat(c.get("id").toString(), c.get("cat").toString());
                                 Restaurant restaurant = new Restaurant(res.get("id").toString(), res.get("name").toString(), res.get("ort").toString(), category);
                                 ArrayList<Person> members = new ArrayList<>();
-                                ArrayList<Person> favorites = new ArrayList<>();
+                                user.clearFavorites();
                                 JSONArray m = o.getJSONArray("members");
 
                                 for(int j = 0; j < m.length(); j++)
@@ -233,14 +233,14 @@ public class MahlzeitServiceAPI {
                                     JSONObject member = m.getJSONObject(j);
                                     Person p =  new Person(member.get("id").toString(), member.get("prename").toString(), member.get("surname").toString());
                                     if(member.get("isFriend").toString().toLowerCase() == "true") {
-                                        favorites.add(p);
+                                        user.setFavorit(p);
                                     }
                                     members.add(p);
                                 }
                                 Group g =  new Group(o.get("id").toString(), restaurant, members);
                                 groups.add(g);
                                 dataSource.open();
-                                dataSource.insertGroup(g, user, favorites);
+                                dataSource.insertGroup(g, user, user.getFavoritePersons());
                                 dataSource.close();
                             }
                             callback.onGetGroups(groups);

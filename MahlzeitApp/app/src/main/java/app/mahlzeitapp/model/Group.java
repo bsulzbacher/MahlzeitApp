@@ -52,5 +52,23 @@ public class Group {
         }
     }
 
+    public boolean checkIfUserInGroup(Person user) {
+        for(int i = 0; i < members.size(); i++) {
+            if (members.get(i).getPersonenkennziffer().equals(user.getPersonenkennziffer()))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean checkIfFavoriteInGroup(ArrayList<Person> favorites) {
+        for(int i = 0; i < members.size(); i++) {
+            for(int j = 0; j < favorites.size(); j++) {
+                if (members.get(i).getPersonenkennziffer().equals(favorites.get(j).getPersonenkennziffer()))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public void clearMembers() { this.members.clear(); }
 }
