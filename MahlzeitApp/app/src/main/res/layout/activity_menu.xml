@@ -28,7 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todays_date"
         android:text="Neue Gruppe" />
-    <!-- ListView: Group(= Restaurant) with Sub-Items (= Favourites) -->
+
     <ListView
         android:id="@+id/list_groups"
         android:layout_width="wrap_content"
@@ -38,7 +38,5 @@
         tools:layout_editor_absoluteX="0dp"
         android:divider="#99e600"
         android:dividerHeight="1dp" />
-
-
 
 </android.support.constraint.ConstraintLayout>

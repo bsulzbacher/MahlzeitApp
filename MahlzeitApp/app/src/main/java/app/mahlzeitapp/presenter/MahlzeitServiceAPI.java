@@ -53,7 +53,7 @@ public class MahlzeitServiceAPI {
 
 
     public void getUserData(final String pnm, MainActivity co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/login/" + pnm;
+        String url = "http://10.0.2.2:8080/login/" + pnm;
 
         RequestQueue queue = Volley.newRequestQueue(co.getApplicationContext());
 
@@ -92,7 +92,7 @@ public class MahlzeitServiceAPI {
     }
 
     public void getAllPersonen(final Person u, Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/users/getAll/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/users/getAll/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -145,7 +145,7 @@ public class MahlzeitServiceAPI {
     }
 
     public void removeFavoritePerson(final Person u, final Person p, Context co) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/users/addFriends/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
         ArrayList<Person> favorite = user.getFavoritePersons();
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -172,7 +172,7 @@ public class MahlzeitServiceAPI {
     }
 
     public void addFavoritePerson(final Person u, final Person p, Context co) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/users/addFriends/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -204,7 +204,7 @@ public class MahlzeitServiceAPI {
     //Groups
 
     public void getAllGroups(final Person u, Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -263,7 +263,7 @@ public class MahlzeitServiceAPI {
 
     //zb senden: {"restaurant":{"id":3}}
     public void addGroup(final Person u, final Group group, Context co) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/groups/addGroup/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/groups/addGroup/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -291,7 +291,7 @@ public class MahlzeitServiceAPI {
 
     //zb senden: 12
     public void joinGroup(final Person u, final Group group, Context co, final boolean is_user_in_group) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/groups/addMember/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/groups/addMember/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -328,7 +328,7 @@ public class MahlzeitServiceAPI {
     }
 
     public void updateGroupJoin(final Person u, Context co) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/groups/addMember/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/groups/addMember/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -362,7 +362,7 @@ public class MahlzeitServiceAPI {
     //Restaurants
 
     public void getAllRestaurants(Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/restaurant/getall/";
+        String url = "http://10.0.2.2:8080/restaurant/getall/";
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -407,7 +407,7 @@ public class MahlzeitServiceAPI {
 
     //zb senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
     public void addRestaurant(final Person u, final Restaurant restaurant, Context co) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/restaurant/addrestaurant/" + user.getPersonenkennziffer();
+        String url = "http://10.0.2.2:8080/restaurant/addrestaurant/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -442,7 +442,7 @@ public class MahlzeitServiceAPI {
     //Categories
 
     public void getAllCat(Context co, final VolleyCallback callback) throws IOException, JSONException {
-        String url = "http://10.0.0.2:8080/restaurant/getallcat/";
+        String url = "http://10.0.2.2:8080/restaurant/getallcat/";
 
         RequestQueue queue = Volley.newRequestQueue(co);
 

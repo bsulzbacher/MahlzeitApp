@@ -8,6 +8,7 @@ import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.R;
 import app.mahlzeitapp.view.GroupDetailActivity;
+import app.mahlzeitapp.view.MainActivity;
 import app.mahlzeitapp.view.MenuActivity;
 
 import android.content.Intent;
@@ -113,6 +114,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             @Override
             public void onClick(View view)
             {
+                GroupDetailActivity.selectedGroup = group;
                 activity.goToGroupDetailView(user, group);
             }
         });
