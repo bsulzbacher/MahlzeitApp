@@ -70,5 +70,6 @@ public class BaseActivity extends AppCompatActivity {
     public void uploadContent() throws IOException, JSONException {
         user = MainActivity.user;
         service.addFavoritePerson(user, null, BaseActivity.this);
+        service.updateGroupJoin(user, BaseActivity.this);
     }
 }

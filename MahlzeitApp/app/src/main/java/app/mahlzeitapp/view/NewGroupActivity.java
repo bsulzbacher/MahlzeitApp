@@ -121,6 +121,8 @@ public class NewGroupActivity extends BaseActivity {
 
             try {
                 service.addGroup(user, newGroup, NewGroupActivity.this);
+                TextView sucessmsg = (TextView) findViewById(R.id.label_success);
+                sucessmsg.setText("Gruppe erfolgreich angelegt.");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -128,28 +130,5 @@ public class NewGroupActivity extends BaseActivity {
             }
             }
         });
-
-        final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
-        buttonNewRestaurant.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                goToNewRestaurantView(user);
-            }
-        });
-
-        //button "new restaurant"
-        final Button button = (Button) findViewById(R.id.btn_new_restaurant);
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                goToNewRestaurantView(user);
-            }
-        });
     }
-
-
-    public void goToNewRestaurantView(Person user) {
-        Intent intent = new Intent(this, NewRestaurantActivity.class);
-        startActivity(intent);
-    }
-
 }

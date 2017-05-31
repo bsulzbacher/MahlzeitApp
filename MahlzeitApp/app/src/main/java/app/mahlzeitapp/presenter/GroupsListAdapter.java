@@ -113,10 +113,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             @Override
             public void onClick(View view)
             {
-                //go to detail view
-                //??
                 activity.goToGroupDetailView(user, group);
-                //??
             }
         });
         return row;

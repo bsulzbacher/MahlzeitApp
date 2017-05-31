@@ -44,9 +44,11 @@ import app.mahlzeitapp.view.MenuActivity;
 public class MahlzeitServiceAPI {
 
     private MahlzeitDataSource dataSource;
+    private final Person user;
 
     public MahlzeitServiceAPI(Context context) throws MalformedURLException {
         dataSource = new MahlzeitDataSource(context);
+        user = MainActivity.user;
     }
 
 
@@ -89,7 +91,7 @@ public class MahlzeitServiceAPI {
         queue.add(stringRequest);
     }
 
-    public void getAllPersonen(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
+    public void getAllPersonen(final Person u, Context co, final VolleyCallback callback) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/users/getAll/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -142,7 +144,7 @@ public class MahlzeitServiceAPI {
         queue.add(stringRequest);
     }
 
-    public void removeFavoritePerson(final Person user, final Person p, Context co) throws IOException, JSONException {
+    public void removeFavoritePerson(final Person u, final Person p, Context co) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
         ArrayList<Person> favorite = user.getFavoritePersons();
@@ -169,7 +171,7 @@ public class MahlzeitServiceAPI {
         queue.add(request);
     }
 
-    public void addFavoritePerson(final Person user, final Person p, Context co) throws IOException, JSONException {
+    public void addFavoritePerson(final Person u, final Person p, Context co) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/users/addFriends/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -201,7 +203,7 @@ public class MahlzeitServiceAPI {
 
     //Groups
 
-    public void getAllGroups(final Person user, Context co, final VolleyCallback callback) throws IOException, JSONException {
+    public void getAllGroups(final Person u, Context co, final VolleyCallback callback) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/groups/getGroups/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -214,7 +216,7 @@ public class MahlzeitServiceAPI {
                         try {
                             JSONArray obj = new JSONArray(t);
                             ArrayList<Group> groups  = new ArrayList<Group>();
-
+                            user.clearFavorites();
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
@@ -224,14 +226,13 @@ public class MahlzeitServiceAPI {
                                 Cat category = new Cat(c.get("id").toString(), c.get("cat").toString());
                                 Restaurant restaurant = new Restaurant(res.get("id").toString(), res.get("name").toString(), res.get("ort").toString(), category);
                                 ArrayList<Person> members = new ArrayList<>();
-                                user.clearFavorites();
                                 JSONArray m = o.getJSONArray("members");
 
                                 for(int j = 0; j < m.length(); j++)
                                 {
                                     JSONObject member = m.getJSONObject(j);
                                     Person p =  new Person(member.get("id").toString(), member.get("prename").toString(), member.get("surname").toString());
-                                    if(member.get("isFriend").toString().toLowerCase() == "true") {
+                                    if(member.get("isFriend").toString().toLowerCase() == "true" && !user.checkFavorite(p)) {
                                         user.setFavorit(p);
                                     }
                                     members.add(p);
@@ -261,24 +262,15 @@ public class MahlzeitServiceAPI {
     }
 
     //zb senden: {"restaurant":{"id":3}}
-    public void addGroup(final Person user, final Group group, Context co) throws IOException, JSONException {
+    public void addGroup(final Person u, final Group group, Context co) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/groups/addGroup/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
         JSONObject myobject = new JSONObject();
-        //myobject.put("id", group.getRestaurant().getId()); //-> {"restaurant":{"id":3}} ???
-       // myobject.put("date", "1495276040000");
         JSONObject res = new JSONObject();
         res.put("id", group.getRestaurant().getId());
-        //res.put("name", group.getRestaurant().getName());
-        //res.put("ort", group.getRestaurant().getPlace());
-        //JSONObject cat = new JSONObject();
-        //cat.put("id",group.getRestaurant().getCategory().getId());
-        //cat.put("cat", group.getRestaurant().getCategory().getName());
-        //res.put("category", cat);
-        myobject.put("resturant", res);
-        //myobject.put("members", new JSONArray());
+        myobject.put("restaurant", res);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, myobject, new Response.Listener<JSONObject>(){
             @Override
             public void onResponse(JSONObject response) {
@@ -298,7 +290,7 @@ public class MahlzeitServiceAPI {
     }
 
     //zb senden: 12
-    public void joinGroup(final Person user, final Group group, Context co, final boolean is_user_in_group) throws IOException, JSONException {
+    public void joinGroup(final Person u, final Group group, Context co, final boolean is_user_in_group) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/groups/addMember/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
@@ -306,7 +298,6 @@ public class MahlzeitServiceAPI {
         JSONObject obj = new JSONObject();
         if(group != null)
             obj.put("id", group.getId());
-
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
             @Override
@@ -322,10 +313,49 @@ public class MahlzeitServiceAPI {
                 else
                     dataSource.insertMember(group, user);
                 dataSource.close();
+
+                dataSource.openRead();
+                int count = dataSource.checkUpdateTable(group.getId(), user.getPersonenkennziffer());
+                dataSource.close();
+
+                dataSource.open();
+                dataSource.updateUpdateTable(count, group.getId(), user.getPersonenkennziffer());
+                dataSource.close();
             }
         });
 
         queue.add(request);
+    }
+
+    public void updateGroupJoin(final Person u, Context co) throws IOException, JSONException {
+        String url = "http://10.0.0.2:8080/groups/addMember/" + user.getPersonenkennziffer();
+
+        RequestQueue queue = Volley.newRequestQueue(co);
+
+
+        dataSource.openRead();
+        final int[] groupids = dataSource.getUpdatedGroups();
+        dataSource.close();
+
+        for(int i = 0; i < groupids.length; i++) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", groupids[i]);
+            final int index = i;
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    String t = response.toString();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    dataSource.open();
+                    dataSource.deleteUpdateTable(String.valueOf(groupids[index]), user.getPersonenkennziffer());
+                    dataSource.close();
+                }
+            });
+            queue.add(request);
+        }
     }
 
 
@@ -376,7 +406,7 @@ public class MahlzeitServiceAPI {
     }
 
     //zb senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
-    public void addRestaurant(final Person user, final Restaurant restaurant, Context co) throws IOException, JSONException {
+    public void addRestaurant(final Person u, final Restaurant restaurant, Context co) throws IOException, JSONException {
         String url = "http://10.0.0.2:8080/restaurant/addrestaurant/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);

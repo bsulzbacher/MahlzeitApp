@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MahlzeitDbHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "mahlzeit.db";
-    public static final int DB_VERSION = 13;
+    public static final int DB_VERSION = 14;
 
     public static final String TABLE_USER = "user";
     public static final String TABLE_FAVORITES = "favorites";
@@ -18,24 +18,21 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_RESTAURANTS = "restaurants";
     public static final String TABLE_GROUPS = "groups";
     public static final String TABLE_MEMBERS_GROUPS = "group_members";
+    public static final String TABLE_MEMBERS_GROUPS_UPDATED = "group_members_updated";
 
+    //table user
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_FIRSTNAME = "firstname";
     public static final String COLUMN_LASTNAME = "lastname";
     public static final String COLUMN_PRIMARAY_USER = "isUser";
 
+    // table favorites
     public static final String COLUMN_ID_USER = "_id";
     public static final String COLUMN_ID_FAVORITE = "idFavorite";
 
-    //???
     public static final String COLUMN_ID_CAT = "id";
-    //public static final String COLUMN_NAME_CAT = "name";
     public static final String COLUMN_NAME = "name";
-
-    //public static final String COLUMN_ID_RESTAURANT = "_id";
-    //public static final String COLUMN_NAME_RESTAURANT = "name";
     public static final String COLUMN_PLACE = "place";
-    public static final String COLUMN_DATE = "date";
     public static final String COLUMN_ID_RESTAURANT = "idRestaurant";
     public static final String COLUMN_ID_MEMBER = "idMember";
     public static final String COLUMN_ID_GROUP = "idGroup";
@@ -76,6 +73,12 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
                     COLUMN_ID_MEMBER + " INTEGER NOT NULL, "+
                     " PRIMARY KEY ("+COLUMN_ID_GROUP+", "+COLUMN_ID_MEMBER+"));";
 
+    public static final String SQL_CREATE6 =
+            "CREATE TABLE " + TABLE_MEMBERS_GROUPS_UPDATED +
+                    "(" + COLUMN_ID_GROUP + "  INTEGER NOT NULL, " +
+                    COLUMN_ID_MEMBER + " INTEGER NOT NULL, "+
+                    " PRIMARY KEY ("+COLUMN_ID_GROUP+", "+COLUMN_ID_MEMBER+"));";
+
 
 
 
@@ -91,6 +94,7 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE3);
         db.execSQL(SQL_CREATE4);
         db.execSQL(SQL_CREATE5);
+        db.execSQL(SQL_CREATE6);
     }
 
     @Override
@@ -101,6 +105,7 @@ public class MahlzeitDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RESTAURANTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROUPS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEMBERS_GROUPS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEMBERS_GROUPS_UPDATED);
 
        onCreate(db);
     }

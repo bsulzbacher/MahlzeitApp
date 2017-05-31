@@ -11,7 +11,6 @@ public class Group {
     private String id;
     private Restaurant restaurant;
     private ArrayList<Person> members;
-    //private Date date;
 
     public Group(String id, Restaurant restaurant, ArrayList<Person> members) {
         this.id = id;
@@ -69,6 +68,4 @@ public class Group {
         }
         return false;
     }
-
-    public void clearMembers() { this.members.clear(); }
 }

@@ -52,6 +52,17 @@ public class MahlzeitDataSource {
         database.insertOrThrow("user", null, values);
     }
 
+    public Person getUserData()
+    {
+        Cursor resultSet = database.rawQuery("Select _id, firstname, lastname from user WHERE isUser=1",null);
+
+        resultSet.moveToFirst();
+        int id = resultSet.getInt(0);
+        String firstname = resultSet.getString(1);
+        String lastname = resultSet.getString(2);
+        return new Person(Integer.toString(id), firstname,lastname );
+    }
+
     public void cleanFavoriteTable()
     {
         database.delete("favorites", null, null);
@@ -64,17 +75,6 @@ public class MahlzeitDataSource {
         values.put("_id", user.getPersonenkennziffer());
         values.put("idFavorite", p.getPersonenkennziffer());
         database.insertOrThrow("favorites", null, values);
-    }
-
-    public Person getUserData()
-    {
-        Cursor resultSet = database.rawQuery("Select _id, firstname, lastname from user WHERE isUser=1",null);
-
-        resultSet.moveToFirst();
-        int id = resultSet.getInt(0);
-        String firstname = resultSet.getString(1);
-        String lastname = resultSet.getString(2);
-        return new Person(Integer.toString(id), firstname,lastname );
     }
 
     public ArrayList<Person> getFavorites()
@@ -115,7 +115,6 @@ public class MahlzeitDataSource {
 
 
     //Category
-
     public ArrayList<Cat> getAllCat() {
         Cursor resultSet = database.rawQuery("Select _id, name from categories", null);
         ArrayList<Cat> categories = new ArrayList<Cat>();
@@ -138,10 +137,7 @@ public class MahlzeitDataSource {
         database.insertOrThrow("categories", null, values);
     }
 
-    //Restaurant
-
     public ArrayList<Restaurant> getAllRestaurants() {
-        //? wie verweist restaurant auf cat? hat cat restaurant_id?
         Cursor resultSet = database.rawQuery("Select r._id, r.name, r.place, c._id, c.name from restaurants r, categories c WHERE r._id = c._id", null); //???
         ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
         resultSet.moveToFirst();
@@ -175,7 +171,6 @@ public class MahlzeitDataSource {
     }
 
     //Groups
-
     public ArrayList<Group> getAllGroups(Person user) {
         Cursor resultSetGroups = database.rawQuery("Select _id, idRestaurant from groups", null); //??? favorites?
         ArrayList<Group> groups = new ArrayList<Group>();
@@ -216,12 +211,46 @@ public class MahlzeitDataSource {
 
     public void insertMember(Group g, Person user)
     {
-        //database.delete("group_members", "idGroup = ?", new String[] {g.getId()});
-        ArrayList<Person> members = g.getMembers();
         ContentValues member = new ContentValues();
         member.put("idGroup", g.getId());
         member.put("idMember", user.getPersonenkennziffer());
         database.insertOrThrow("group_members", null, member);
+
+    }
+
+    public int checkUpdateTable(String id, String pnum)
+    {
+        Cursor result = database.rawQuery("Select count(*) from group_members_updated WHERE idMember = ? AND idGroup = ?", new String[] {pnum, id});
+        result.moveToNext();
+        return result.getInt(0);
+    }
+
+    public void updateUpdateTable(int count, String id, String pnum) {
+        if(count > 0) {
+            database.delete("group_members_updated", "idGroup = ? AND idMember= ?", new String[] {id, pnum});
+        } else {
+            ContentValues member = new ContentValues();
+            member.put("idGroup", id);
+            member.put("idMember", pnum);
+            database.insertOrThrow("group_members_updated", null, member);
+        }
+    }
+
+    public void deleteUpdateTable(String id, String pnum) {
+        database.delete("group_members_updated", "idGroup = ? AND idMember= ?", new String[] {id, pnum});
+    }
+
+    public int[] getUpdatedGroups() {
+        Cursor result = database.rawQuery("Select idGroup from group_members_updated", new String[] {});
+        int[] groupids = new int[result.getCount()];
+        result.moveToFirst();
+        int i = 0;
+        while (!result.isAfterLast()) {
+            groupids[i] = result.getInt(0);
+            i++;
+            result.moveToNext();
+        }
+        return groupids;
     }
 
     public void deleteMember(Group g, Person user)
@@ -264,5 +293,4 @@ public class MahlzeitDataSource {
             database.insertOrThrow("group_members", null, member);
         }
     }
-
 }
