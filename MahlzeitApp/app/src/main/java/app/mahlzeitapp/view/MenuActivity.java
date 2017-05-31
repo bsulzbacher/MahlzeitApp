@@ -65,6 +65,7 @@ public class MenuActivity extends BaseActivity {
                 @Override
                 public void onGetGroups(ArrayList<Group> g) {
                     ArrayList<Group> groups = g;
+
                     final GroupsListAdapter groupsListAdapter =
                             new GroupsListAdapter(MenuActivity.this,
                                     R.layout.list_item_group, groups,

@@ -38,7 +38,11 @@ public class GetGroupsSevice {
 		User foundUser = this.userService.loginuser(id);
 
 		for (Group g : allGroups) {
-			Cat cat = new Cat(g.getRestaurant().getCategory().getId(), g.getRestaurant().getCategory().getCategory());
+			Cat cat;
+			if(g.getRestaurant() != null)
+				cat = new Cat(g.getRestaurant().getCategory().getId(), g.getRestaurant().getCategory().getCategory());
+			else
+				cat = new Cat((long) 0, "DEFUALT");
 			Set<UserComplete> members = new HashSet<>();
 
 			for (User u : g.getMembers()) {
@@ -48,14 +52,18 @@ public class GetGroupsSevice {
 				uc.setIsFriend(isFriend);
 				members.add(uc);
 			}
-			Restaurant res = new Restaurant(g.getRestaurant().getId(), g.getRestaurant().getName(),
-					g.getRestaurant().getOrt(), cat);
+			Restaurant res;
+			if(g.getRestaurant() != null)
+				 res = new Restaurant(g.getRestaurant().getId(), g.getRestaurant().getName(),
+						g.getRestaurant().getOrt(), cat);
+			else
+				res = new Restaurant((long) 1, "TEST", "TEST", cat);
 			Groups group = new Groups(g.getId(), g.getDate(), res, members);
 			groupsSend.add(group);
 		}
 
 		return groupsSend;
-	}
+	};
 
 	public void addUserToGroup(Long userId, Long groupId) {
 		Group group = groupRepo.findOne(groupId);

@@ -41,23 +41,6 @@ public class GroupDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_group_detail);
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
-
-        //button join/leave group
-        final Button buttonAddGroup = (Button) findViewById(R.id.btn_add_group);
-        buttonAddGroup.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                /*try {
-                    service.joinGroup(user, group, GroupDetailActivity.this, );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-            }
-        });
-
-
     }
 
     public void goToHomeView(Person user) {

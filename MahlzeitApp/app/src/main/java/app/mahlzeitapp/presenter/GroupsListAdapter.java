@@ -35,6 +35,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
     private ArrayList<Group> data = null;
     private final Person user;
     private final  MahlzeitServiceAPI service;
+    private final MenuActivity activity;
 
     public GroupsListAdapter(Context context, int layoutResourceId, ArrayList<Group> data, Person user, MahlzeitServiceAPI service) {
         super(context, layoutResourceId, data);
@@ -42,6 +43,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
         this.context = context;
         this.data = data;
         this.user = user;
+        this.activity = (MenuActivity) context;
         this.service = service;
     }
 
@@ -113,8 +115,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             {
                 //go to detail view
                 //??
-
-
+                activity.goToGroupDetailView(user, group);
                 //??
             }
         });

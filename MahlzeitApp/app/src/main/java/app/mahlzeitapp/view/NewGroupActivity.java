@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import app.mahlzeitapp.R;
 import app.mahlzeitapp.model.Cat;
@@ -40,6 +41,7 @@ public class NewGroupActivity extends BaseActivity {
     Person user;
 
     public NewGroupActivity() throws MalformedURLException {
+        user = MainActivity.user;
     }
 
 
@@ -73,9 +75,7 @@ public class NewGroupActivity extends BaseActivity {
 
                 @Override
                 public void onGetRestaurants(ArrayList<Restaurant> restaurants) {
-
-                    //verursacht Fehler: "app.mahlzeitapp.model.Cat cannot be stored in destination array of type java.lang.String[]"
-                    /*ArrayList<String> resNames = new ArrayList<String>();
+                    ArrayList<String> resNames = new ArrayList<String>();
                     for(int i = 0; i < restaurants.size(); i++)
                     {
                         Restaurant restaurant = restaurants.get(i);
@@ -86,7 +86,7 @@ public class NewGroupActivity extends BaseActivity {
 
                     String[] resItems = resNames.toArray(new String[0]);
                     ArrayAdapter<String> resAdapter = new ArrayAdapter<String>(NewGroupActivity.this, android.R.layout.simple_spinner_dropdown_item, resItems);
-                    resDropdown.setAdapter(resAdapter);*/
+                    resDropdown.setAdapter(resAdapter);
                 }
 
                 @Override
@@ -116,7 +116,7 @@ public class NewGroupActivity extends BaseActivity {
                 }
             }
 
-            Group newGroup = null;
+            Group newGroup = new Group(String.valueOf(new Random().nextInt()), newRestaurant, new ArrayList<Person>());
             newGroup.setRestaurant(newRestaurant);
 
             try {
