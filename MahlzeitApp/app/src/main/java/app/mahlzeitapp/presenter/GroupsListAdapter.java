@@ -7,7 +7,10 @@ import android.content.Context;
 import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.view.GroupDetailActivity;
+import app.mahlzeitapp.view.MenuActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,6 +112,10 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             public void onClick(View view)
             {
                 //go to detail view
+                //??
+
+
+                //??
             }
         });
         return row;

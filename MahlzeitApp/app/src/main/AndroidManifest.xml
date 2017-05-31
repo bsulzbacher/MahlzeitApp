@@ -26,5 +26,8 @@
         <activity android:name=".view.BaseActivity" />
         <activity android:name=".view.FavoritePersonsActivity" />
         <activity android:name=".view.MenuActivity" />
+        <activity android:name=".view.NewGroupActivity" />
+        <activity android:name=".view.NewRestaurantActivity" />
+        <activity android:name=".view.GroupDetailActivity" />
     </application>
 </manifest>

@@ -21,9 +21,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import app.mahlzeitapp.R;
+import app.mahlzeitapp.model.Cat;
 import app.mahlzeitapp.model.Group;
 import app.mahlzeitapp.model.Person;
+import app.mahlzeitapp.model.Restaurant;
 import app.mahlzeitapp.presenter.FavoritePersonListAdapter;
+import app.mahlzeitapp.presenter.GroupsListAdapter;
 import app.mahlzeitapp.presenter.MahlzeitServiceAPI;
 import app.mahlzeitapp.presenter.VolleyCallback;
 
@@ -47,49 +50,102 @@ public class NewGroupActivity extends BaseActivity {
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
-        //restaurants dropdown
-        Spinner restaurantDropdown = (Spinner)findViewById(R.id.restaurant_spinner);
-        String[] restaurantItems = new String[]{"1", "2", "three"};
-        ArrayAdapter<String> restaurantAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, restaurantItems);
-        restaurantDropdown.setAdapter(restaurantAdapter);
+        final Spinner resDropdown = (Spinner) findViewById(R.id.restaurant_spinner);
+        final ArrayList<Restaurant> restaurantList = new ArrayList<Restaurant>();
 
-        //categories dropdown
-        Spinner catDropdown = (Spinner)findViewById(R.id.cat_spinner);
-        String[] catItems = new String[]{"1", "2", "three"};
-        ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, catItems);
-        catDropdown.setAdapter(catAdapter);
+        try {
+            service.getAllRestaurants(NewGroupActivity.this,  new VolleyCallback() {
+
+                @Override
+                public void onSuccess(Person string) {
+
+                }
+
+                @Override
+                public void onGetALL(ArrayList<Person> personen) {
+
+                }
+
+                @Override
+                public void onGetGroups(ArrayList<Group> g) {
+
+                }
+
+                @Override
+                public void onGetRestaurants(ArrayList<Restaurant> restaurants) {
+
+                    //verursacht Fehler: "app.mahlzeitapp.model.Cat cannot be stored in destination array of type java.lang.String[]"
+                    /*ArrayList<String> resNames = new ArrayList<String>();
+                    for(int i = 0; i < restaurants.size(); i++)
+                    {
+                        Restaurant restaurant = restaurants.get(i);
+                        restaurantList.add(restaurant); //to access later to get id
+                        String resName = restaurant.getName();
+                        resNames.add(resName);
+                    }
+
+                    String[] resItems = resNames.toArray(new String[0]);
+                    ArrayAdapter<String> resAdapter = new ArrayAdapter<String>(NewGroupActivity.this, android.R.layout.simple_spinner_dropdown_item, resItems);
+                    resDropdown.setAdapter(resAdapter);*/
+                }
+
+                @Override
+                public void onGetCat(ArrayList<Cat> categories) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
-        //button new group (today)
-        //POST: restaurants (dropdown), kategories (dropdown), userId - then go to home view
+        //zb senden: {"restaurant":{"id":3}}
         final Button buttonAddGroup = (Button) findViewById(R.id.btn_add_group);
         buttonAddGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //to do: send restaurantId (JSON), userId (in url) like this: {"restaurant":{"id":3}} -> goToHomeVi
-                try {
-                    service.addGroup(user, null, NewGroupActivity.this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //button new restaurant
-                //POST: userid?
-                final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
-                buttonNewRestaurant.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        goToNewRestaurantView(user);
-                    }
-                });
+            final String selectedResName = resDropdown.getItemAtPosition(resDropdown.getSelectedItemPosition()).toString();
 
+            //get selected Restaurant from dropdown
+            Restaurant newRestaurant = null;
+            for (Restaurant r : restaurantList) {
+                if (selectedResName.equals(r.getName())) {
+                    newRestaurant = r;
+                    break;
+                }
+            }
+
+            Group newGroup = null;
+            newGroup.setRestaurant(newRestaurant);
+
+            try {
+                service.addGroup(user, newGroup, NewGroupActivity.this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            }
+        });
+
+        final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
+        buttonNewRestaurant.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToNewRestaurantView(user);
+            }
+        });
+
+        //button "new restaurant"
+        final Button button = (Button) findViewById(R.id.btn_new_restaurant);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                goToNewRestaurantView(user);
             }
         });
     }
 
-    public void goToHomeView(Person user) {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-    }
 
     public void goToNewRestaurantView(Person user) {
         Intent intent = new Intent(this, NewRestaurantActivity.class);

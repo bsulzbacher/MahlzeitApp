@@ -1,5 +1,7 @@
 package app.mahlzeitapp.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Eli on 25.05.17.
  */
@@ -49,4 +51,6 @@ public class Restaurant {
     public void setCategory(Cat category) {
         this.category = category;
     }
+
+
 }

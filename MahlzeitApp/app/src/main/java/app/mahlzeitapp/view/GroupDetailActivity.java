@@ -42,32 +42,21 @@ public class GroupDetailActivity extends BaseActivity {
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
-        //button join group (today)
+        //button join/leave group
         final Button buttonAddGroup = (Button) findViewById(R.id.btn_add_group);
         buttonAddGroup.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v) {
-                //to do: send groupId (in body), userId (in url) like this: {"restaurant":{"id":3}} -> goToHomeView
-                try {
-                    service.addGroup(user, null, GroupDetailActivity.this);
+                /*try {
+                    service.joinGroup(user, group, GroupDetailActivity.this, );
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
 
-
-        //button new restaurant
-        //POST: userid?
-        final Button buttonNewRestaurant = (Button) findViewById(R.id.btn_new_restaurant);
-        buttonNewRestaurant.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                goToNewRestaurantView(user);
-            }
-        });
 
     }
 

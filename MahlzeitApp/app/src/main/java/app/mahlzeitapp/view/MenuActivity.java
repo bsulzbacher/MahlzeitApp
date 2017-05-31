@@ -45,10 +45,10 @@ public class MenuActivity extends BaseActivity {
         setSupportActionBar(mainToolbar);
 
         //todays date
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date());
         TextView myTextView = (TextView) findViewById(R.id.todays_date); myTextView.setText("Tagesübersicht " + date);
 
-        //todays groups ?
+        //todays groups
         try {
             service.getAllGroups(user, MenuActivity.this,  new VolleyCallback() {
 
@@ -90,25 +90,23 @@ public class MenuActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        //button "new group" ?
+        //button "new group"
         final Button button = (Button) findViewById(R.id.btn_new_group);
         button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v) {
-
-                try {
-                    service.addGroup(user, null, MenuActivity.this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                goToNewGroupView(user);
             }
         });
     }
 
     public void goToNewGroupView(Person user) {
         Intent intent = new Intent(this, NewGroupActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToGroupDetailView(Person user, Group group) {
+        Intent intent = new Intent(this, GroupDetailActivity.class);
         startActivity(intent);
     }
 

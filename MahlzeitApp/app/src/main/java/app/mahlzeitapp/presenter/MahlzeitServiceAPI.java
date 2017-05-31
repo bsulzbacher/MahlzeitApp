@@ -218,7 +218,6 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
-                                //group, restaurant, cat, members ?
 
                                 JSONObject res = o.getJSONObject("resturant");
                                 JSONObject c = res.getJSONObject("category");
@@ -288,7 +287,7 @@ public class MahlzeitServiceAPI {
         queue.add(request);
     }
 
-    //zb senden: 12 (kein JSON?)
+    //zb senden: 12
     public void joinGroup(final Person user, final Group group, Context co, final boolean is_user_in_group) throws IOException, JSONException {
         String url = "http://10.0.2.2:8080/groups/addMember/" + user.getPersonenkennziffer();
 
@@ -339,11 +338,13 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
-                                Restaurant r =  new Restaurant(o.get("id").toString(), o.get("name").toString(), o.get("place").toString(),
-                                        new Cat(o.get("id").toString(), o.get("category").toString()));
-                                restaurants.add(r);
+
+                                JSONObject c = o.getJSONObject("category");
+                                Cat category = new Cat(c.get("id").toString(), c.get("cat").toString());
+                                Restaurant restaurant = new Restaurant(o.get("id").toString(), o.get("name").toString(), o.get("ort").toString(), category);
+                                restaurants.add(restaurant);
                                 dataSource.open();
-                                dataSource.insertRestaurant(r);
+                                dataSource.insertRestaurant(restaurant);
                                 dataSource.close();
                             }
                             callback.onGetRestaurants(restaurants);
@@ -366,7 +367,7 @@ public class MahlzeitServiceAPI {
 
     //zb senden: {"name":"Chinese","ort":"Hauptplatz","category":{"id":2}}
     public void addRestaurant(final Person user, final Restaurant restaurant, Context co) throws IOException, JSONException {
-        String url = "http://10.0.2.2:8080/restaurant/addrestaurant/";
+        String url = "http://10.0.2.2:8080/restaurant/addrestaurant/" + user.getPersonenkennziffer();
 
         RequestQueue queue = Volley.newRequestQueue(co);
 
@@ -417,10 +418,11 @@ public class MahlzeitServiceAPI {
                             for(int i = 0; i < obj.length(); i++)
                             {
                                 JSONObject o = obj.getJSONObject(i);
-                                Cat c =  new Cat(o.get("id").toString(), o.get("name").toString());
-                                categories.add(c);
+
+                                Cat category = new Cat(o.get("id").toString(), o.get("category").toString());
+                                categories.add(category);
                                 dataSource.open();
-                                dataSource.insertCat(c);
+                                dataSource.insertCat(category);
                                 dataSource.close();
                             }
                             callback.onGetCat(categories);
@@ -440,7 +442,6 @@ public class MahlzeitServiceAPI {
 
         queue.add(stringRequest);
     }
-
 
 
 }
