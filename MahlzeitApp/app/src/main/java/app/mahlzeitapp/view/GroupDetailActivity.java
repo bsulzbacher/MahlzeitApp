@@ -36,6 +36,7 @@ public class GroupDetailActivity extends BaseActivity {
     MahlzeitServiceAPI service = new MahlzeitServiceAPI(GroupDetailActivity.this);
     Person user;
     public static Group selectedGroup = null;
+    //public static ArrayList<Person> members = selectedGroup.getMembers();
 
     public GroupDetailActivity() throws MalformedURLException {
         user = MainActivity.user;
@@ -49,9 +50,39 @@ public class GroupDetailActivity extends BaseActivity {
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
+        final ArrayList<String> favoriteMembers = new ArrayList<String>();
+        final ArrayList<String> regularMembers = new ArrayList<String>();
+
         TextView groupName = (TextView) findViewById(R.id.group_name); groupName.setText(selectedGroup.getRestaurant().getName());
         TextView groupCat = (TextView) findViewById(R.id.group_cat); groupCat.setText(selectedGroup.getRestaurant().getCategory().getName());
         TextView groupPlace = (TextView) findViewById(R.id.group_place); groupPlace.setText(selectedGroup.getRestaurant().getPlace());
+
+        Button btnJoin = (Button) findViewById(R.id.btn_join_group);
+        if (selectedGroup.checkIfUserInGroup(user)) {
+            btnJoin.setText("austreten");
+        } else {
+            btnJoin.setText("beitreten");
+        }
+
+        /*for (Person p : members) {
+            if (p.checkFavorite(user)) {
+                favoriteMembers.add(p.getVorname().toString());
+            } else {
+                regularMembers.add(p.getVorname().toString());
+            }
+        }
+
+
+        final ListView listviewFavo = (ListView) findViewById(R.id.list_favorites);
+        final ListView listviewMember = (ListView) findViewById(R.id.list_members);
+
+        final ArrayAdapter favoAdapter = new ArrayAdapter(GroupDetailActivity.this,
+                android.R.layout.simple_list_item_1, favoriteMembers);
+        listviewFavo.setAdapter(favoAdapter);
+
+        final ArrayAdapter memberAdapter = new ArrayAdapter(GroupDetailActivity.this,
+                android.R.layout.simple_list_item_1, members);
+        listviewMember.setAdapter(memberAdapter);*/
 
         try {
             service.getAllGroups(user, GroupDetailActivity.this, new VolleyCallback() {
@@ -64,40 +95,7 @@ public class GroupDetailActivity extends BaseActivity {
                 @Override
                 public void onGetALL(ArrayList<Person> personen) {
 
-                    ArrayList<Person> p = personen;
 
-                    ArrayList<String> persNames = new ArrayList<String>();
-                    for(int i = 0; i < personen.size(); i++)
-                    {
-                        Person person = personen.get(i);
-                        String persName = person.getVorname();
-                        persNames.add(persName);
-                    }
-
-
-                    /*final GroupsListAdapter groupsListAdapter =
-                            new GroupsListAdapter(MenuActivity.this,
-                                    R.layout.list_item_group, groups,
-                                    MainActivity.user, service
-                            );*/
-
-                    /*ArrayList<String> resNames = new ArrayList<String>();
-                    for(int i = 0; i < restaurants.size(); i++)
-                    {
-                        Restaurant restaurant = restaurants.get(i);
-                        restaurantList.add(restaurant); //to access later to get id
-                        String resName = restaurant.getName();
-                        resNames.add(resName);
-                    }
-
-                    String[] resItems = resNames.toArray(new String[0]);
-                    ArrayAdapter<String> resAdapter = new ArrayAdapter<String>(NewGroupActivity.this, android.R.layout.simple_spinner_dropdown_item, resItems);*/
-
-
-                    ArrayAdapter<String> personsListAdapter = new ArrayAdapter<String>(GroupDetailActivity.this, android.R.layout.simple_list_item_1, persNames);
-
-                    final ListView personsListView = (ListView) findViewById(R.id.list_persons);
-                    personsListView.setAdapter(personsListAdapter);
                 }
 
                 @Override
@@ -121,17 +119,6 @@ public class GroupDetailActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void goToHomeView(Person user) {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToNewRestaurantView(Person user) {
-        Intent intent = new Intent(this, NewRestaurantActivity.class);
-        startActivity(intent);
     }
 
 }
