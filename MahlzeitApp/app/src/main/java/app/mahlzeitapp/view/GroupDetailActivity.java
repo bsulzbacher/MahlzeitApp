@@ -35,7 +35,7 @@ public class GroupDetailActivity extends BaseActivity {
 
     MahlzeitServiceAPI service = new MahlzeitServiceAPI(GroupDetailActivity.this);
     Person user;
-    public static Group selectedGroup = null;
+    public Group selectedGroup = null;
     //public static ArrayList<Person> members = selectedGroup.getMembers();
 
     public GroupDetailActivity() throws MalformedURLException {
@@ -49,7 +49,8 @@ public class GroupDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_group_detail);
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
-
+        selectedGroup = (Group) getIntent().getSerializableExtra("group");
+        ArrayList<Person> members = selectedGroup.getMembers();
         final ArrayList<String> favoriteMembers = new ArrayList<String>();
         final ArrayList<String> regularMembers = new ArrayList<String>();
 
@@ -64,7 +65,7 @@ public class GroupDetailActivity extends BaseActivity {
             btnJoin.setText("beitreten");
         }
 
-        /*for (Person p : members) {
+        for (Person p : members) {
             if (p.checkFavorite(user)) {
                 favoriteMembers.add(p.getVorname().toString());
             } else {
@@ -82,7 +83,7 @@ public class GroupDetailActivity extends BaseActivity {
 
         final ArrayAdapter memberAdapter = new ArrayAdapter(GroupDetailActivity.this,
                 android.R.layout.simple_list_item_1, members);
-        listviewMember.setAdapter(memberAdapter);*/
+        listviewMember.setAdapter(memberAdapter);
 
         try {
             service.getAllGroups(user, GroupDetailActivity.this, new VolleyCallback() {

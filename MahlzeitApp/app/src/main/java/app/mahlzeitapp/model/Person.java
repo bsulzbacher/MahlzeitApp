@@ -1,12 +1,13 @@
 package app.mahlzeitapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Bianca on 19.04.2017.
  */
 
-public class Person {
+public class Person implements Serializable{
     private String personenkennziffer;
     private String vorname;
     private String nachname;

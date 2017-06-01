@@ -1,12 +1,13 @@
 package app.mahlzeitapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Eli on 25.05.17.
  */
 
-public class Restaurant {
+public class Restaurant implements Serializable{
 
     private String id;
     private String name;

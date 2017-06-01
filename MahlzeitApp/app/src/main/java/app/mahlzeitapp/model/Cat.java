@@ -1,10 +1,12 @@
 package app.mahlzeitapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Eli on 25.05.17.
  */
 
-public class Cat {
+public class Cat implements Serializable{
 
     private String id;
     private String name;

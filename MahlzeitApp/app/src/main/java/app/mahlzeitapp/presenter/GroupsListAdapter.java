@@ -114,7 +114,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>
             @Override
             public void onClick(View view)
             {
-                GroupDetailActivity.selectedGroup = group;
+                //GroupDetailActivity.selectedGroup = group;
                 activity.goToGroupDetailView(user, group);
             }
         });

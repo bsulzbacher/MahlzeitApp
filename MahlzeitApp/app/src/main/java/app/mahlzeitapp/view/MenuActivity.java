@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -108,7 +109,9 @@ public class MenuActivity extends BaseActivity {
 
     public void goToGroupDetailView(Person user, Group group) {
         Intent intent = new Intent(this, GroupDetailActivity.class);
+        intent.putExtra("group", (Serializable) group);
         startActivity(intent);
+        //finish();
     }
 
 }

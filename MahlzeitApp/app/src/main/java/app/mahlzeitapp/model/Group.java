@@ -1,5 +1,6 @@
 package app.mahlzeitapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ import java.util.Date;
  * Created by Eli on 25.05.17.
  */
 
-public class Group {
+public class Group implements Serializable {
     private String id;
     private Restaurant restaurant;
     private ArrayList<Person> members;
